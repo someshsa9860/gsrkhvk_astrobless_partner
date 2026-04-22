@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrobless Partner — UI Preview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-dark:       #0D0B1E;
+    --surface-dark:  #1A1740;
+    --card-dark:     #231F54;
+    --border-dark:   #2D2860;
+    --primary:       #5C6BC0;
+    --primary-dim:   rgba(92,107,192,.15);
+    --accent:        #FFB300;
+    --accent-dim:    rgba(255,179,0,.15);
+    --success:       #4CAF50;
+    --success-dim:   rgba(76,175,80,.1);
+    --warning:       #FF9800;
+    --error:         #F44336;
+    --info:          #2196F3;
+    --text-primary:  #ECEFF1;
+    --text-secondary:#B0BEC5;
+    --text-disabled: #546E7A;
+    --online:        #4CAF50;
+    --online-dim:    rgba(76,175,80,.1);
+    --brand1:        #5C6BC0;
+    --brand2:        #7E57C2;
+  }
+
+  body {
+    background: #08071A;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text-primary);
+    padding: 32px 20px;
+    min-height: 100vh;
+  }
+
+  h1.page-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .page-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-bottom: 40px;
+  }
+
+  /* ── Layout ── */
+  .screens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 36px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .screen-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .screen-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-disabled);
+  }
+
+  /* ── Phone shell ── */
+  .phone {
+    width: 340px;
+    height: 700px;
+    background: var(--bg-dark);
+    border-radius: 40px;
+    border: 2px solid var(--border-dark);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+  .status-bar .time { color: var(--text-primary); }
+  .status-icons { display: flex; gap: 4px; align-items: center; }
+
+  /* Screen body */
+  .screen-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 60px;
+    scrollbar-width: none;
+  }
+  .screen-body::-webkit-scrollbar { display: none; }
+
+  /* AppBar */
+  .app-bar {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-dark);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .app-bar .logo-box {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--brand1), var(--brand2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+    flex-shrink: 0;
+  }
+  .app-bar .title-block { flex: 1; }
+  .app-bar .title-block .sub { font-size: 10px; color: var(--text-secondary); }
+  .app-bar .title-block .main { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .app-bar .bar-actions { display: flex; gap: 4px; }
+  .icon-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; cursor: pointer; color: var(--text-secondary);
+    font-size: 16px;
+  }
+
+  /* Bottom nav */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--surface-dark);
+    border-top: 1px solid var(--border-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 10px;
+    transition: background .15s;
+    min-width: 56px;
+  }
+  .nav-item.active .nav-icon { color: var(--primary); }
+  .nav-item.active .nav-text { color: var(--primary); }
+  .nav-item:not(.active) .nav-icon { color: var(--text-disabled); }
+  .nav-item:not(.active) .nav-text { color: var(--text-disabled); }
+  .nav-icon { font-size: 20px; }
+  .nav-text { font-size: 10px; font-weight: 500; }
+
+  /* Content padding */
+  .content { padding: 0 16px; }
+
+  /* ── Component helpers ── */
+  .card {
+    background: var(--card-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .card-16 {
+    background: var(--card-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .mt-4 { margin-top: 4px; }
+  .mt-8 { margin-top: 8px; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-20 { margin-top: 20px; }
+
+  .row { display: flex; align-items: center; }
+  .row.gap-8 { gap: 8px; }
+  .row.gap-12 { gap: 12px; }
+  .row.sb { justify-content: space-between; }
+  .col { display: flex; flex-direction: column; }
+
+  .title-sm { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .title-md { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+  .body-sm { font-size: 11px; color: var(--text-secondary); }
+  .body-md { font-size: 13px; color: var(--text-secondary); }
+  .label-sm { font-size: 10px; color: var(--text-secondary); }
+  .accent { color: var(--accent); }
+  .primary { color: var(--primary); }
+  .success { color: var(--success); }
+  .error { color: var(--error); }
+
+  .icon-circle {
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sz-40 { width: 40px; height: 40px; font-size: 18px; }
+  .sz-44 { width: 44px; height: 44px; font-size: 20px; }
+
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px; font-weight: 600;
+  }
+  .badge-green  { background: rgba(76,175,80,.15);  color: var(--success); }
+  .badge-orange { background: rgba(255,152,0,.15);  color: var(--warning); }
+  .badge-blue   { background: rgba(33,150,243,.15); color: var(--info); }
+  .badge-purple { background: var(--primary-dim);   color: var(--primary); }
+
+  /* ── SCREEN 1: Dashboard ── */
+  .online-toggle {
+    display: flex; align-items: center; gap: 12px;
+    border-radius: 16px;
+    padding: 14px 16px;
+    border: 1px solid rgba(76,175,80,.4);
+    background: var(--online-dim);
+  }
+  .toggle-track {
+    width: 44px; height: 24px; border-radius: 12px;
+    background: rgba(76,175,80,.3);
+    position: relative; cursor: pointer;
+    flex-shrink: 0;
+  }
+  .toggle-thumb {
+    position: absolute; top: 3px; right: 3px;
+    width: 18px; height: 18px; border-radius: 9px;
+    background: var(--online);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .stat-card {
+    background: var(--card-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .stat-icon-box {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; margin-bottom: 12px;
+  }
+  .stat-value { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+  .stat-label { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+
+  .quick-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .action-chip {
+    background: var(--card-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 12px 8px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    cursor: pointer;
+  }
+  .action-chip .chip-icon { font-size: 20px; }
+  .action-chip .chip-label { font-size: 10px; color: var(--text-secondary); }
+
+  /* ── SCREEN 2: Incoming request ── */
+  .sheet-bar {
+    width: 40px; height: 4px; border-radius: 2px;
+    background: var(--border-dark); margin: 12px auto 20px;
+  }
+  .countdown-ring {
+    width: 96px; height: 96px; position: relative;
+    margin: 0 auto;
+  }
+  .countdown-ring svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+  .countdown-ring .avatar {
+    position: absolute; inset: 8px; border-radius: 50%;
+    background: var(--primary-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700; color: var(--primary);
+  }
+  .accept-decline {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px;
+  }
+  .btn {
+    padding: 14px; border-radius: 14px; cursor: pointer;
+    font-size: 14px; font-weight: 600; text-align: center; border: none;
+  }
+  .btn-outline-error { background: transparent; border: 1px solid var(--error); color: var(--error); }
+  .btn-success { background: var(--success); color: #fff; }
+
+  /* ── SCREEN 3: Chat ── */
+  .chat-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; background: var(--bg-dark);
+    border-bottom: 1px solid var(--border-dark);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .back-btn { font-size: 20px; color: var(--text-secondary); cursor: pointer; }
+  .chat-header .peer-info .name { font-size: 14px; font-weight: 600; }
+  .chat-header .peer-info .sub { font-size: 11px; color: var(--success); }
+
+  .billing-bar {
+    background: var(--surface-dark);
+    border-bottom: 1px solid var(--border-dark);
+    padding: 6px 16px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--primary);
+  }
+
+  .messages { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .msg { max-width: 75%; padding: 10px 12px; border-radius: 14px; font-size: 13px; line-height: 1.4; }
+  .msg-customer { align-self: flex-start; background: var(--surface-dark); color: var(--text-primary); border-bottom-left-radius: 4px; }
+  .msg-astrologer { align-self: flex-end; background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
+  .msg-time { font-size: 10px; color: rgba(255,255,255,.5); margin-top: 4px; text-align: right; }
+  .msg-time-left { font-size: 10px; color: var(--text-disabled); margin-top: 4px; }
+
+  .chat-input-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    background: var(--surface-dark);
+    border-top: 1px solid var(--border-dark);
+    position: sticky; bottom: 0;
+  }
+  .chat-input {
+    flex: 1; background: var(--card-dark); border: 1px solid var(--border-dark);
+    border-radius: 20px; padding: 8px 14px; font-size: 13px;
+    color: var(--text-primary);
+  }
+  .send-btn {
+    width: 36px; height: 36px; border-radius: 18px;
+    background: var(--primary); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px;
+  }
+
+  /* ── SCREEN 4: Call ── */
+  .call-screen { background: #0A0A1A; height: 100%; display: flex; flex-direction: column; padding: 0; }
+  .call-timer-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(26,23,64,.8); border-radius: 20px;
+    padding: 6px 12px; font-size: 12px; font-weight: 600;
+  }
+  .call-timer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+  .call-voice-view {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 20px;
+  }
+  .call-avatar {
+    width: 112px; height: 112px; border-radius: 56px;
+    background: var(--primary-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; font-weight: 700; color: var(--primary);
+  }
+  .call-status { font-size: 18px; font-weight: 600; }
+  .call-elapsed { font-size: 13px; color: var(--text-secondary); }
+  .call-billing {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface-dark); border-radius: 20px;
+    padding: 6px 16px; font-size: 12px; color: var(--primary);
+  }
+  .call-controls {
+    display: flex; justify-content: space-evenly; align-items: center;
+    padding: 16px 40px 32px;
+  }
+  .ctrl-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .ctrl-circle {
+    width: 60px; height: 60px; border-radius: 30px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .ctrl-active { background: var(--primary-dim); border: 1px solid var(--primary); }
+  .ctrl-inactive { background: var(--surface-dark); border: 1px solid var(--border-dark); }
+  .ctrl-end { width: 70px; height: 70px; border-radius: 35px; background: var(--error); border: none; }
+  .ctrl-label { font-size: 10px; color: var(--text-secondary); }
+
+  /* ── SCREEN 5: Consultation History ── */
+  .tab-bar {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border-dark);
+    padding: 0 16px;
+  }
+  .tab {
+    padding: 10px 14px; font-size: 13px; font-weight: 500;
+    cursor: pointer; color: var(--text-secondary);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab.active { color: var(--primary); border-color: var(--primary); }
+
+  .consult-card {
+    background: var(--card-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 14px; padding: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  /* ── SCREEN 6: Earnings ── */
+  .earnings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .earn-card {
+    background: var(--card-dark); border: 1px solid var(--border-dark);
+    border-radius: 14px; padding: 14px;
+  }
+  .earn-icon { font-size: 20px; margin-bottom: 10px; }
+  .earn-value { font-size: 17px; font-weight: 700; }
+  .earn-label { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+  .payout-banner {
+    background: var(--success-dim);
+    border: 1px solid rgba(76,175,80,.3);
+    border-radius: 14px; padding: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .tx-row {
+    background: var(--card-dark); border: 1px solid var(--border-dark);
+    border-radius: 12px; padding: 12px;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  }
+
+  /* ── SCREEN 7: Notifications ── */
+  .notif-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .notif-unread { background: rgba(92,107,192,.04); }
+  .notif-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--primary); flex-shrink: 0; margin-top: 4px;
+  }
+
+  /* ── SCREEN 8: Profile ── */
+  .profile-hero {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 24px 16px 16px; gap: 10px;
+  }
+  .profile-avatar {
+    width: 80px; height: 80px; border-radius: 40px;
+    background: linear-gradient(135deg, var(--brand1), var(--brand2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700; color: #fff;
+    border: 3px solid var(--border-dark);
+  }
+  .profile-menu-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-dark);
+    cursor: pointer;
+  }
+  .pm-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .pm-chevron { margin-left: auto; color: var(--text-disabled); font-size: 14px; }
+
+  /* Auth screens */
+  .auth-screen { padding: 40px 24px 24px; display: flex; flex-direction: column; gap: 0; }
+  .auth-logo {
+    width: 60px; height: 60px; border-radius: 18px;
+    background: linear-gradient(135deg, var(--brand1), var(--brand2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700; margin-bottom: 28px;
+  }
+  .auth-title { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+  .auth-sub { font-size: 13px; color: var(--text-secondary); margin-top: 6px; margin-bottom: 32px; }
+  .input-field {
+    background: var(--card-dark); border: 1px solid var(--border-dark);
+    border-radius: 12px; padding: 13px 14px;
+    font-size: 14px; color: var(--text-primary); width: 100%; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .input-field .placeholder { color: var(--text-disabled); }
+  .input-field.active { border-color: var(--primary); }
+  .primary-btn {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 14px; padding: 15px;
+    font-size: 15px; font-weight: 600; width: 100%; cursor: pointer; margin-top: 8px;
+  }
+  .otp-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; }
+  .otp-box {
+    width: 44px; height: 52px; border-radius: 12px;
+    background: var(--card-dark); border: 1px solid var(--border-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; color: var(--text-primary);
+  }
+  .otp-box.filled { border-color: var(--primary); }
+
+  .divider-text {
+    display: flex; align-items: center; gap: 10px;
+    margin: 16px 0; color: var(--text-disabled); font-size: 12px;
+  }
+  .divider-text::before, .divider-text::after {
+    content: ''; flex: 1; height: 1px; background: var(--border-dark);
+  }
+
+  .section-title {
+    font-size: 14px; font-weight: 700; color: var(--text-primary);
+    padding: 16px 16px 8px;
+  }
+
+  /* Shimmer effect */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(90deg, var(--card-dark) 25%, #2d2a5a 50%, var(--card-dark) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+  }
+
+  /* Scrollbar for screen body  */
+  .screen-body { position: relative; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">✦ Astrobless Partner — UI Preview</h1>
+<p class="page-subtitle">Complete screen-by-screen breakdown · Dark theme · All implemented screens</p>
+
+<div class="screens-grid">
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 1 · Login — Phone OTP
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Auth · Phone OTP</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <div class="screen-body">
+        <div class="auth-screen">
+          <div class="auth-logo">A</div>
+          <div class="auth-title">Welcome,<br>Astrologer</div>
+          <div class="auth-sub">Enter your mobile number to continue</div>
+
+          <div class="input-field active">
+            <span style="color:var(--text-secondary);font-size:18px">🇮🇳</span>
+            <span style="color:var(--text-secondary)">+91</span>
+            <span style="color:var(--text-disabled);border-left:1px solid var(--border-dark);padding-left:10px">98765 43210</span>
+          </div>
+
+          <button class="primary-btn">Send OTP</button>
+
+          <div class="divider-text">or</div>
+
+          <button class="primary-btn" style="background:var(--card-dark);border:1px solid var(--border-dark);color:var(--text-primary)">✉ Sign in with Email</button>
+
+          <p style="text-align:center;font-size:11px;color:var(--text-disabled);margin-top:24px;line-height:1.6">By continuing, you agree to our<br>Terms of Service and Privacy Policy</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 2 · OTP Verification
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Auth · OTP Verify</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <div class="screen-body">
+        <div class="auth-screen">
+          <div style="font-size:20px;cursor:pointer;color:var(--text-secondary);margin-bottom:20px">← Back</div>
+          <div class="auth-logo" style="margin-bottom:20px">🔐</div>
+          <div class="auth-title">Enter OTP</div>
+          <div class="auth-sub">We sent a 6-digit code to<br><strong style="color:var(--text-primary)">+91 98765 43210</strong></div>
+
+          <div class="otp-row">
+            <div class="otp-box filled">1</div>
+            <div class="otp-box filled">2</div>
+            <div class="otp-box filled">3</div>
+            <div class="otp-box filled">4</div>
+            <div class="otp-box" style="border-color:var(--primary);box-shadow:0 0 0 2px rgba(92,107,192,.3)">_</div>
+            <div class="otp-box"></div>
+          </div>
+
+          <button class="primary-btn">Verify →</button>
+
+          <p style="text-align:center;margin-top:20px;font-size:12px;color:var(--text-secondary)">
+            Resend code in <span style="color:var(--primary);font-weight:600">0:43</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 3 · Dashboard (Home)
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Dashboard · Home</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <div class="screen-body">
+        <div class="app-bar">
+          <div class="logo-box">A</div>
+          <div class="title-block">
+            <div class="sub">Good morning!</div>
+            <div class="main">Astrobless Partner</div>
+          </div>
+          <div class="bar-actions">
+            <div class="icon-btn">🔔</div>
+            <div class="icon-btn">⚙️</div>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- Online toggle -->
+          <div class="mt-16 online-toggle">
+            <div class="icon-circle sz-44" style="background:rgba(76,175,80,.15)">📡</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm" style="color:var(--online)">You are Online</div>
+              <div class="body-sm">Customers can see and contact you</div>
+            </div>
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </div>
+
+          <!-- Today's overview -->
+          <div class="mt-20">
+            <div class="title-md">Today's Overview</div>
+            <div class="stats-grid mt-12">
+              <div class="stat-card">
+                <div class="stat-icon-box" style="background:var(--accent-dim)">💰</div>
+                <div class="stat-value accent">₹540</div>
+                <div class="stat-label">Today's Earnings</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon-box" style="background:var(--primary-dim)">📈</div>
+                <div class="stat-value primary">₹3,200</div>
+                <div class="stat-label">This Week</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon-box" style="background:rgba(33,150,243,.1)">💬</div>
+                <div class="stat-value" style="color:var(--info)">142</div>
+                <div class="stat-label">Total Consults</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon-box" style="background:rgba(255,152,0,.1)">⭐</div>
+                <div class="stat-value" style="color:var(--warning)">4.8 ★</div>
+                <div class="stat-label">Rating</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick actions -->
+          <div class="mt-20">
+            <div class="title-md">Quick Actions</div>
+            <div class="quick-actions mt-12">
+              <div class="action-chip">
+                <div class="chip-icon">👤</div>
+                <div class="chip-label">My Profile</div>
+              </div>
+              <div class="action-chip">
+                <div class="chip-icon">📊</div>
+                <div class="chip-label">Earnings</div>
+              </div>
+              <div class="action-chip">
+                <div class="chip-icon">💬</div>
+                <div class="chip-label">Consults</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent consultations -->
+          <div class="mt-20 row sb">
+            <div class="title-md">Recent Consultations</div>
+            <span style="font-size:12px;color:var(--primary);cursor:pointer">See all</span>
+          </div>
+          <div class="mt-12 col" style="gap:8px">
+            <div class="consult-card">
+              <div class="icon-circle sz-40" style="background:rgba(33,150,243,.1)">💬</div>
+              <div class="col" style="flex:1">
+                <div class="title-sm">Priya M.</div>
+                <div class="body-sm">Chat · 18 min</div>
+              </div>
+              <div class="col" style="align-items:flex-end;gap:4px">
+                <span class="accent" style="font-size:13px;font-weight:600">₹378</span>
+                <span class="badge badge-green">completed</span>
+              </div>
+            </div>
+            <div class="consult-card">
+              <div class="icon-circle sz-40" style="background:var(--success-dim)">📞</div>
+              <div class="col" style="flex:1">
+                <div class="title-sm">Arjun S.</div>
+                <div class="body-sm">Voice · 32 min</div>
+              </div>
+              <div class="col" style="align-items:flex-end;gap:4px">
+                <span class="accent" style="font-size:13px;font-weight:600">₹896</span>
+                <span class="badge badge-green">completed</span>
+              </div>
+            </div>
+            <div class="consult-card">
+              <div class="icon-circle sz-40" style="background:var(--primary-dim)">🔮</div>
+              <div class="col" style="flex:1">
+                <div class="title-sm">Sunita K.</div>
+                <div class="body-sm">Kundli</div>
+              </div>
+              <div class="col" style="align-items:flex-end;gap:4px">
+                <span class="accent" style="font-size:13px;font-weight:600">₹350</span>
+                <span class="badge badge-orange">pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active"><div class="nav-icon">🏠</div><div class="nav-text">Home</div></div>
+        <div class="nav-item"><div class="nav-icon">💬</div><div class="nav-text">Consults</div></div>
+        <div class="nav-item"><div class="nav-icon">💰</div><div class="nav-text">Earnings</div></div>
+        <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-text">Profile</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 4 · Incoming Request Sheet
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Incoming Request · Bottom Sheet</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <!-- Blurred background dashboard -->
+      <div class="screen-body" style="filter:blur(2px) brightness(.4);pointer-events:none">
+        <div class="content mt-16">
+          <div class="online-toggle"><div class="icon-circle sz-44" style="background:rgba(76,175,80,.15)">📡</div><div class="col" style="flex:1"><div class="title-sm" style="color:var(--online)">You are Online</div></div></div>
+          <div class="stats-grid mt-16">
+            <div class="stat-card shimmer" style="height:100px"></div>
+            <div class="stat-card shimmer" style="height:100px"></div>
+            <div class="stat-card shimmer" style="height:100px"></div>
+            <div class="stat-card shimmer" style="height:100px"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Sheet overlay -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:var(--surface-dark);border-radius:24px 24px 0 0;padding:0 24px 32px;z-index:20">
+        <div class="sheet-bar"></div>
+        <!-- Countdown ring -->
+        <div class="countdown-ring" style="margin-bottom:16px">
+          <svg width="96" height="96" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="44" fill="none" stroke="var(--border-dark)" stroke-width="3"/>
+            <circle cx="48" cy="48" r="44" fill="none" stroke="var(--primary)" stroke-width="3"
+              stroke-dasharray="276.46" stroke-dashoffset="92" stroke-linecap="round"/>
+          </svg>
+          <div class="avatar">P</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--text-primary)">Priya Mehta</div>
+          <div style="font-size:13px;color:var(--primary);margin-top:6px;display:flex;align-items:center;justify-content:center;gap:6px">
+            💬 Incoming Chat Request
+          </div>
+          <div style="font-size:15px;color:var(--accent);font-weight:600;margin-top:4px">₹30/min</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:6px">20 seconds left</div>
+        </div>
+        <div class="accept-decline">
+          <button class="btn btn-outline-error">✗ Decline</button>
+          <button class="btn btn-success">✓ Accept</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 5 · Chat Consultation
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Chat Consultation · Live</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <div class="screen-body" style="padding-bottom:0">
+        <div class="chat-header">
+          <div class="back-btn">←</div>
+          <div class="icon-circle sz-40" style="background:var(--primary-dim);font-size:16px;font-weight:700;color:var(--primary)">P</div>
+          <div class="peer-info">
+            <div class="name">Priya Mehta</div>
+            <div class="sub">● Active consultation</div>
+          </div>
+          <div style="margin-left:auto;font-size:16px;color:var(--text-secondary)">⋮</div>
+        </div>
+        <!-- Billing bar -->
+        <div class="billing-bar">
+          ⏱ <span>28 min left · ₹840 balance</span>
+        </div>
+        <!-- Messages -->
+        <div class="messages">
+          <div class="col">
+            <div class="msg msg-customer">Namaste ji, I am going through a tough time. My Saturn is causing issues…</div>
+            <div class="msg-time-left">9:32 AM</div>
+          </div>
+          <div class="col">
+            <div class="msg msg-astrologer">Namaste! Please share your date and time of birth so I can check your kundli.</div>
+            <div class="msg-time">9:33 AM ✓✓</div>
+          </div>
+          <div class="col">
+            <div class="msg msg-customer">12 March 1990, 6:45 AM, born in Pune.</div>
+            <div class="msg-time-left">9:33 AM</div>
+          </div>
+          <div class="col">
+            <div class="msg msg-astrologer">Thank you! Give me a moment to analyze your chart...</div>
+            <div class="msg-time">9:34 AM ✓✓</div>
+          </div>
+          <div class="col">
+            <div class="msg msg-customer" style="font-style:italic;color:var(--text-secondary);font-size:12px">Priya is typing…</div>
+          </div>
+        </div>
+      </div>
+      <!-- Chat input -->
+      <div class="chat-input-bar" style="position:sticky;bottom:0">
+        <div class="chat-input"><span style="color:var(--text-disabled)">Type a message...</span></div>
+        <div style="font-size:16px;color:var(--text-secondary);cursor:pointer">📎</div>
+        <div class="send-btn">➤</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 6 · Voice Call
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Voice Call · Active</div>
+    <div class="phone" style="background:#0A0A1A">
+      <div class="status-bar" style="background:#0A0A1A">
+        <span class="time">9:41</span>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <div class="screen-body" style="background:#0A0A1A;padding:0">
+        <!-- Top timer -->
+        <div style="padding:16px">
+          <div class="call-timer-badge">
+            <div class="call-timer-dot"></div>
+            5:24
+          </div>
+        </div>
+        <!-- Voice view -->
+        <div class="call-voice-view">
+          <div class="call-avatar">A</div>
+          <div class="col" style="align-items:center;gap:6px">
+            <div class="call-status">Arjun Singh</div>
+            <div class="call-elapsed" style="color:var(--success)">● Connected</div>
+          </div>
+          <!-- Billing -->
+          <div class="call-billing">⏱ 24 min left · ₹720 balance</div>
+        </div>
+        <!-- Controls -->
+        <div class="call-controls">
+          <div class="ctrl-btn">
+            <div class="ctrl-circle ctrl-active">🎤</div>
+            <div class="ctrl-label">Unmute</div>
+          </div>
+          <div class="ctrl-btn">
+            <div class="ctrl-circle ctrl-end" style="display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer">📵</div>
+            <div class="ctrl-label" style="color:var(--error)">End Call</div>
+          </div>
+          <div class="ctrl-btn">
+            <div class="ctrl-circle ctrl-active">🔊</div>
+            <div class="ctrl-label">Speaker</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 7 · Consultation History
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Consultations · History</div>
+    <div class="phone">
+      <div class="status-bar"><span class="time">9:41</span><div class="status-icons">📶 🔋</div></div>
+      <div class="screen-body">
+        <div class="app-bar" style="padding:10px 16px;border-bottom:1px solid var(--border-dark)">
+          <div style="font-size:17px;font-weight:700;flex:1">Consultations</div>
+        </div>
+        <div class="tab-bar">
+          <div class="tab active">All</div>
+          <div class="tab">Completed</div>
+          <div class="tab">Pending</div>
+        </div>
+        <div class="content mt-16 col" style="gap:10px">
+          <div class="consult-card">
+            <div class="icon-circle sz-40" style="background:rgba(33,150,243,.1)">💬</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">Priya M.</div>
+              <div class="body-sm">Chat · Apr 21 · 18 min</div>
+            </div>
+            <div class="col" style="align-items:flex-end;gap:4px">
+              <span class="accent" style="font-weight:600;font-size:13px">₹378</span>
+              <span class="badge badge-green">completed</span>
+            </div>
+          </div>
+          <div class="consult-card">
+            <div class="icon-circle sz-40" style="background:var(--success-dim)">📞</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">Arjun S.</div>
+              <div class="body-sm">Voice · Apr 21 · 32 min</div>
+            </div>
+            <div class="col" style="align-items:flex-end;gap:4px">
+              <span class="accent" style="font-weight:600;font-size:13px">₹896</span>
+              <span class="badge badge-green">completed</span>
+            </div>
+          </div>
+          <div class="consult-card">
+            <div class="icon-circle sz-40" style="background:var(--primary-dim)">🔮</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">Sunita K.</div>
+              <div class="body-sm">Kundli · Apr 20</div>
+            </div>
+            <div class="col" style="align-items:flex-end;gap:4px">
+              <span class="accent" style="font-weight:600;font-size:13px">₹350</span>
+              <span class="badge badge-orange">pending</span>
+            </div>
+          </div>
+          <div class="consult-card">
+            <div class="icon-circle sz-40" style="background:var(--success-dim)">📞</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">Ravi P.</div>
+              <div class="body-sm">Voice · Apr 20 · 12 min</div>
+            </div>
+            <div class="col" style="align-items:flex-end;gap:4px">
+              <span class="accent" style="font-weight:600;font-size:13px">₹252</span>
+              <span class="badge badge-green">completed</span>
+            </div>
+          </div>
+          <div class="consult-card">
+            <div class="icon-circle sz-40" style="background:rgba(33,150,243,.1)">💬</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">Meena D.</div>
+              <div class="body-sm">Chat · Apr 19 · 40 min</div>
+            </div>
+            <div class="col" style="align-items:flex-end;gap:4px">
+              <span class="accent" style="font-weight:600;font-size:13px">₹840</span>
+              <span class="badge badge-green">completed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><div class="nav-icon">🏠</div><div class="nav-text">Home</div></div>
+        <div class="nav-item active"><div class="nav-icon">💬</div><div class="nav-text">Consults</div></div>
+        <div class="nav-item"><div class="nav-icon">💰</div><div class="nav-text">Earnings</div></div>
+        <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-text">Profile</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 8 · Earnings
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Earnings</div>
+    <div class="phone">
+      <div class="status-bar"><span class="time">9:41</span><div class="status-icons">📶 🔋</div></div>
+      <div class="screen-body">
+        <div class="app-bar" style="padding:10px 16px;border-bottom:none">
+          <div style="font-size:17px;font-weight:700;flex:1">Earnings</div>
+          <div class="icon-btn">⬇️</div>
+        </div>
+        <div class="tab-bar" style="margin-bottom:0">
+          <div class="tab active">This Week</div>
+          <div class="tab">This Month</div>
+          <div class="tab">All Time</div>
+        </div>
+        <div class="content mt-16">
+          <div class="earnings-grid">
+            <div class="earn-card">
+              <div class="earn-icon">💰</div>
+              <div class="earn-value accent">₹3,780</div>
+              <div class="earn-label">Your Earnings</div>
+            </div>
+            <div class="earn-card">
+              <div class="earn-icon">🎧</div>
+              <div class="earn-value primary">6</div>
+              <div class="earn-label">Consults</div>
+            </div>
+            <div class="earn-card">
+              <div class="earn-icon">📈</div>
+              <div class="earn-value success">₹5,400</div>
+              <div class="earn-label">Gross Revenue</div>
+            </div>
+            <div class="earn-card">
+              <div class="earn-icon">🏢</div>
+              <div class="earn-value" style="color:var(--text-secondary)">₹1,620</div>
+              <div class="earn-label">Platform Fee</div>
+            </div>
+          </div>
+
+          <!-- Payout banner -->
+          <div class="payout-banner mt-16">
+            <div class="icon-circle sz-40" style="background:var(--success-dim)">✅</div>
+            <div class="col" style="flex:1">
+              <div style="font-size:11px;color:var(--text-secondary)">Last Payout Processed</div>
+              <div style="font-size:13px;font-weight:600;color:var(--success)">₹4,320 on Apr 14, 2026</div>
+            </div>
+          </div>
+
+          <!-- Transactions -->
+          <div class="row sb mt-20" style="margin-bottom:12px">
+            <div class="title-md">Transaction History</div>
+            <span class="body-sm">6 entries</span>
+          </div>
+
+          <div class="tx-row">
+            <div class="icon-circle sz-40" style="background:rgba(33,150,243,.1)">💬</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">Priya M.</div>
+              <div class="body-sm">Apr 21, 9:32 AM</div>
+            </div>
+            <span class="accent" style="font-size:13px;font-weight:700">+₹378</span>
+          </div>
+          <div class="tx-row">
+            <div class="icon-circle sz-40" style="background:var(--success-dim)">📞</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">Arjun S.</div>
+              <div class="body-sm">Apr 21, 7:10 AM</div>
+            </div>
+            <span class="accent" style="font-size:13px;font-weight:700">+₹896</span>
+          </div>
+          <div class="tx-row">
+            <div class="icon-circle sz-40" style="background:var(--primary-dim)">🔮</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">Sunita K.</div>
+              <div class="body-sm">Apr 20, 3:00 PM</div>
+            </div>
+            <span class="accent" style="font-size:13px;font-weight:700">+₹350</span>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><div class="nav-icon">🏠</div><div class="nav-text">Home</div></div>
+        <div class="nav-item"><div class="nav-icon">💬</div><div class="nav-text">Consults</div></div>
+        <div class="nav-item active"><div class="nav-icon">💰</div><div class="nav-text">Earnings</div></div>
+        <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-text">Profile</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 9 · Notifications
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Notifications</div>
+    <div class="phone">
+      <div class="status-bar"><span class="time">9:41</span><div class="status-icons">📶 🔋</div></div>
+      <div class="screen-body">
+        <div class="app-bar" style="padding:10px 16px;border-bottom:1px solid var(--border-dark)">
+          <div style="font-size:17px;font-weight:700;flex:1;display:flex;align-items:center;gap:8px">
+            Notifications
+            <span style="background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px">2</span>
+          </div>
+          <span style="font-size:12px;color:var(--primary);cursor:pointer">Mark all read</span>
+        </div>
+
+        <!-- Unread -->
+        <div class="notif-item notif-unread">
+          <div class="icon-circle sz-40" style="background:var(--primary-dim)">💬</div>
+          <div class="col" style="flex:1">
+            <div class="row sb"><div class="title-sm">New chat request</div><div class="notif-dot"></div></div>
+            <div class="body-sm mt-4">Priya M. wants to start a chat consultation</div>
+            <div style="font-size:10px;color:var(--text-disabled);margin-top:4px">5 min ago</div>
+          </div>
+        </div>
+        <div class="notif-item notif-unread">
+          <div class="icon-circle sz-40" style="background:var(--accent-dim)">💰</div>
+          <div class="col" style="flex:1">
+            <div class="row sb"><div class="title-sm">Earnings credited</div><div class="notif-dot"></div></div>
+            <div class="body-sm mt-4">₹378 from consultation with Priya M.</div>
+            <div style="font-size:10px;color:var(--text-disabled);margin-top:4px">2 hours ago</div>
+          </div>
+        </div>
+        <!-- Read -->
+        <div class="notif-item">
+          <div class="icon-circle sz-40" style="background:var(--success-dim)">🏦</div>
+          <div class="col" style="flex:1">
+            <div class="title-sm">Payout processed</div>
+            <div class="body-sm mt-4">Your weekly payout of ₹4,320 has been transferred</div>
+            <div style="font-size:10px;color:var(--text-disabled);margin-top:4px">1 day ago</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="icon-circle sz-40" style="background:var(--success-dim)">✅</div>
+          <div class="col" style="flex:1">
+            <div class="title-sm">KYC Approved! 🎉</div>
+            <div class="body-sm mt-4">Your documents have been verified. You can now go online.</div>
+            <div style="font-size:10px;color:var(--text-disabled);margin-top:4px">3 days ago</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="icon-circle sz-40" style="background:var(--primary-dim)">🔮</div>
+          <div class="col" style="flex:1">
+            <div class="title-sm">Kundli report request</div>
+            <div class="body-sm mt-4">Sunita K. has requested a Kundli report. Due in 24 hours.</div>
+            <div style="font-size:10px;color:var(--text-disabled);margin-top:4px">4 days ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 10 · Profile
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Profile</div>
+    <div class="phone">
+      <div class="status-bar"><span class="time">9:41</span><div class="status-icons">📶 🔋</div></div>
+      <div class="screen-body">
+        <!-- Hero -->
+        <div class="profile-hero">
+          <div style="position:relative;display:inline-block">
+            <div class="profile-avatar">P</div>
+            <div style="position:absolute;bottom:0;right:0;width:24px;height:24px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-dark)">✏️</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:700">Pandit Rajesh Ji</div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">Vedic • Numerology • Tarot</div>
+          </div>
+          <!-- Stats row -->
+          <div style="display:flex;gap:0;background:var(--card-dark);border:1px solid var(--border-dark);border-radius:14px;overflow:hidden;width:100%">
+            <div style="flex:1;padding:12px;text-align:center;border-right:1px solid var(--border-dark)">
+              <div style="font-size:16px;font-weight:700;color:var(--accent)">4.8 ★</div>
+              <div style="font-size:10px;color:var(--text-secondary)">Rating</div>
+            </div>
+            <div style="flex:1;padding:12px;text-align:center;border-right:1px solid var(--border-dark)">
+              <div style="font-size:16px;font-weight:700;color:var(--primary)">142</div>
+              <div style="font-size:10px;color:var(--text-secondary)">Consults</div>
+            </div>
+            <div style="flex:1;padding:12px;text-align:center">
+              <div style="font-size:16px;font-weight:700;color:var(--success)">8 yrs</div>
+              <div style="font-size:10px;color:var(--text-secondary)">Experience</div>
+            </div>
+          </div>
+          <span class="badge badge-green" style="font-size:11px;padding:4px 12px">✓ KYC Verified</span>
+        </div>
+
+        <!-- Menu sections -->
+        <div class="section-title">Account</div>
+        <div class="profile-menu-item">
+          <div class="pm-icon" style="background:var(--primary-dim)">👤</div>
+          <div class="col" style="flex:1"><div class="title-sm">Edit Profile</div><div class="body-sm">Update bio, photo, specialties</div></div>
+          <div class="pm-chevron">›</div>
+        </div>
+        <div class="profile-menu-item">
+          <div class="pm-icon" style="background:var(--success-dim)">💰</div>
+          <div class="col" style="flex:1"><div class="title-sm">Earnings</div><div class="body-sm">View payouts and history</div></div>
+          <div class="pm-chevron">›</div>
+        </div>
+        <div class="profile-menu-item">
+          <div class="pm-icon" style="background:var(--accent-dim)">⭐</div>
+          <div class="col" style="flex:1"><div class="title-sm">Reviews & Ratings</div><div class="body-sm">See what customers say</div></div>
+          <div class="pm-chevron">›</div>
+        </div>
+        <div class="profile-menu-item">
+          <div class="pm-icon" style="background:rgba(33,150,243,.1)">🏦</div>
+          <div class="col" style="flex:1"><div class="title-sm">Bank & Payout Details</div></div>
+          <div class="pm-chevron">›</div>
+        </div>
+
+        <div class="section-title">Support</div>
+        <div class="profile-menu-item">
+          <div class="pm-icon" style="background:var(--primary-dim)">❓</div>
+          <div class="col" style="flex:1"><div class="title-sm">Help & FAQ</div></div>
+          <div class="pm-chevron">›</div>
+        </div>
+        <div class="profile-menu-item" style="border-bottom:none">
+          <div class="pm-icon" style="background:rgba(244,67,54,.1)">🚪</div>
+          <div class="col" style="flex:1"><div class="title-sm" style="color:var(--error)">Sign Out</div></div>
+          <div class="pm-chevron">›</div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item"><div class="nav-icon">🏠</div><div class="nav-text">Home</div></div>
+        <div class="nav-item"><div class="nav-icon">💬</div><div class="nav-text">Consults</div></div>
+        <div class="nav-item"><div class="nav-icon">💰</div><div class="nav-text">Earnings</div></div>
+        <div class="nav-item active"><div class="nav-icon">👤</div><div class="nav-text">Profile</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 11 · Dashboard — Offline State
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Dashboard · Offline State</div>
+    <div class="phone">
+      <div class="status-bar"><span class="time">9:41</span><div class="status-icons">📶 🔋</div></div>
+      <div class="screen-body">
+        <div class="app-bar">
+          <div class="logo-box">A</div>
+          <div class="title-block">
+            <div class="sub">Good morning!</div>
+            <div class="main">Astrobless Partner</div>
+          </div>
+          <div class="bar-actions">
+            <div class="icon-btn">🔔</div>
+            <div class="icon-btn">⚙️</div>
+          </div>
+        </div>
+        <div class="content">
+          <!-- Offline toggle -->
+          <div class="mt-16" style="display:flex;align-items:center;gap:12px;border-radius:16px;padding:14px 16px;border:1px solid var(--border-dark);background:var(--card-dark)">
+            <div class="icon-circle sz-44" style="background:var(--border-dark)">📴</div>
+            <div class="col" style="flex:1">
+              <div class="title-sm">You are Offline</div>
+              <div class="body-sm">Toggle to start receiving requests</div>
+            </div>
+            <div style="width:44px;height:24px;border-radius:12px;background:var(--border-dark);position:relative;cursor:pointer">
+              <div style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:9px;background:var(--text-disabled)"></div>
+            </div>
+          </div>
+          <div class="mt-20">
+            <div class="title-md">Today's Overview</div>
+            <div class="stats-grid mt-12">
+              <div class="stat-card shimmer" style="height:100px"></div>
+              <div class="stat-card shimmer" style="height:100px"></div>
+              <div class="stat-card shimmer" style="height:100px"></div>
+              <div class="stat-card shimmer" style="height:100px"></div>
+            </div>
+          </div>
+          <!-- Empty recent -->
+          <div class="mt-20" style="text-align:center;padding:40px 0">
+            <div style="font-size:48px">💤</div>
+            <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-top:12px">No consultations yet</div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">Go online to start receiving requests</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active"><div class="nav-icon">🏠</div><div class="nav-text">Home</div></div>
+        <div class="nav-item"><div class="nav-icon">💬</div><div class="nav-text">Consults</div></div>
+        <div class="nav-item"><div class="nav-icon">💰</div><div class="nav-text">Earnings</div></div>
+        <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-text">Profile</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 12 · Email Auth
+  ══════════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">Auth · Email Sign In</div>
+    <div class="phone">
+      <div class="status-bar"><span class="time">9:41</span><div class="status-icons">📶 🔋</div></div>
+      <div class="screen-body">
+        <div class="auth-screen">
+          <div style="font-size:20px;cursor:pointer;color:var(--text-secondary);margin-bottom:20px">← Back</div>
+          <div class="auth-logo" style="margin-bottom:20px">✉️</div>
+          <div class="auth-title">Email Sign In</div>
+          <!-- Tabs -->
+          <div style="display:flex;background:var(--card-dark);border-radius:10px;padding:4px;margin:16px 0 24px">
+            <div style="flex:1;text-align:center;padding:8px;border-radius:7px;background:var(--primary);font-size:13px;font-weight:600">Sign In</div>
+            <div style="flex:1;text-align:center;padding:8px;font-size:13px;color:var(--text-secondary)">Register</div>
+          </div>
+          <div class="input-field active">
+            <span style="color:var(--text-disabled);font-size:13px">📧 you@example.com</span>
+          </div>
+          <div class="input-field" style="margin-top:0">
+            <span style="color:var(--text-disabled);font-size:13px">🔒 Password</span>
+          </div>
+          <div style="text-align:right;margin:4px 0 20px">
+            <span style="font-size:12px;color:var(--primary);cursor:pointer">Forgot password?</span>
+          </div>
+          <button class="primary-btn">Sign In →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div style="text-align:center;margin-top:60px;padding-bottom:40px;color:var(--text-disabled);font-size:12px">
+  <div style="margin-bottom:6px">Astrobless Partner · Flutter 3.x · Riverpod · Socket.IO · Agora RTC</div>
+  <div>All screens are dark-mode-first · Warm indigo + gold palette</div>
+</div>
+
+</body>
+</html>

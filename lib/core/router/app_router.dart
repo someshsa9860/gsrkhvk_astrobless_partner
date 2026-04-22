@@ -1,0 +1,154 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/phone_auth_screen.dart';
+import '../../features/auth/presentation/otp_screen.dart';
+import '../../features/auth/presentation/email_auth_screen.dart';
+import '../../features/auth/presentation/forgot_password_screen.dart';
+import '../../features/home/presentation/home_shell.dart';
+import '../../features/dashboard/presentation/dashboard_screen.dart';
+import '../../features/consultations/presentation/consultation_history_screen.dart';
+import '../../features/consultations/presentation/consultation_detail_screen.dart';
+import '../../features/consultations/presentation/chat_consultation_screen.dart';
+import '../../features/consultations/presentation/call_screen.dart';
+import '../../features/earnings/presentation/earnings_screen.dart';
+import '../../features/earnings/presentation/payout_history_screen.dart';
+import '../../features/profile/presentation/profile_screen.dart';
+import '../../features/profile/presentation/edit_profile_screen.dart';
+import '../../features/notifications/presentation/notifications_screen.dart';
+import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/settings/presentation/change_password_screen.dart';
+import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/onboarding/presentation/kyc_screen.dart';
+import '../../features/kundli/presentation/kundli_request_list_screen.dart';
+import '../../features/kundli/presentation/kundli_request_detail_screen.dart';
+import '../../features/kundli/presentation/kundli_report_composer_screen.dart';
+import '../auth/token_storage.dart';
+
+GoRouter buildRouter() {
+  return GoRouter(
+    initialLocation: '/auth/phone',
+    redirect: (context, state) async {
+      final hasTokens = await TokenStorage.hasTokens();
+      final path = state.matchedLocation;
+      final isAuthPath = path.startsWith('/auth');
+
+      if (!hasTokens && !isAuthPath) return '/auth/phone';
+      if (hasTokens && isAuthPath) return '/home';
+      return null;
+    },
+    routes: [
+      // ── Auth ──────────────────────────────────────────────────────────
+      GoRoute(
+        path: '/auth/phone',
+        builder: (_, __) => const PhoneAuthScreen(),
+      ),
+      GoRoute(
+        path: '/auth/otp',
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return OtpScreen(
+            phone: extra['phone'] as String?,
+            email: extra['email'] as String?,
+            isEmailMode: extra['isEmailMode'] as bool? ?? false,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/auth/email',
+        builder: (_, __) => const EmailAuthScreen(),
+      ),
+      GoRoute(
+        path: '/auth/forgot-password',
+        builder: (_, __) => const ForgotPasswordScreen(),
+      ),
+
+      // ── Onboarding ────────────────────────────────────────────────────
+      GoRoute(
+        path: '/onboarding',
+        builder: (_, __) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/kyc',
+        builder: (_, __) => const KycScreen(),
+      ),
+
+      // ── Notifications ─────────────────────────────────────────────────
+      GoRoute(
+        path: '/notifications',
+        builder: (_, __) => const NotificationsScreen(),
+      ),
+
+      // ── Settings ──────────────────────────────────────────────────────
+      GoRoute(
+        path: '/settings',
+        builder: (_, __) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/change-password',
+        builder: (_, __) => const ChangePasswordScreen(),
+      ),
+
+      // ── Profile edit ──────────────────────────────────────────────────
+      GoRoute(
+        path: '/profile/edit',
+        builder: (_, __) => const EditProfileScreen(),
+      ),
+
+      // ── Consultation detail ───────────────────────────────────────────
+      GoRoute(
+        path: '/consultation/:id',
+        builder: (_, state) => ConsultationDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/consultation/chat/:id',
+        builder: (_, state) => ChatConsultationScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/consultation/call/:id',
+        builder: (_, state) => CallScreen(id: state.pathParameters['id']!),
+      ),
+
+      // ── Payout history ────────────────────────────────────────────────
+      GoRoute(
+        path: '/earnings/payouts',
+        builder: (_, __) => const PayoutHistoryScreen(),
+      ),
+
+      // ── Kundli requests ───────────────────────────────────────────────
+      GoRoute(
+        path: '/kundli-requests',
+        builder: (_, __) => const KundliRequestListScreen(),
+      ),
+      GoRoute(
+        path: '/kundli-requests/:id',
+        builder: (_, state) => KundliRequestDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/kundli-requests/:id/compose',
+        builder: (_, state) => KundliReportComposerScreen(id: state.pathParameters['id']!),
+      ),
+
+      // ── Home shell (bottom nav) ───────────────────────────────────────
+      StatefulShellRoute.indexedStack(
+        builder: (_, __, shell) => HomeShell(shell: shell),
+        branches: [
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/home', builder: (_, __) => const DashboardScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/consultations', builder: (_, __) => const ConsultationHistoryScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/earnings', builder: (_, __) => const EarningsScreen()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
+          ]),
+        ],
+      ),
+    ],
+    errorBuilder: (_, state) => Scaffold(
+      body: Center(child: Text('Page not found: ${state.error}')),
+    ),
+  );
+}

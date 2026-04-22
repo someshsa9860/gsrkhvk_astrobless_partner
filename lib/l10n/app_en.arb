@@ -1,0 +1,509 @@
+{
+  "@@locale": "en",
+
+  "appName": "Astrobless Partner",
+  "@appName": { "description": "App name" },
+
+  "cancel": "Cancel",
+  "@cancel": { "description": "Generic cancel button" },
+
+  "retry": "Retry",
+  "@retry": { "description": "Retry button label" },
+
+  "seeAll": "See all",
+  "@seeAll": { "description": "See all link" },
+
+  "or": "or",
+  "@or": { "description": "Divider between auth options" },
+
+  "save": "Save",
+  "@save": {},
+
+  "done": "Done",
+  "@done": {},
+
+  "loading": "Loading...",
+  "@loading": {},
+
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": {},
+
+  "platformFeePrefix": "Platform:",
+  "@platformFeePrefix": { "description": "Label prefix for platform fee amount" },
+
+  "reviewsCount": "{count} reviews",
+  "@reviewsCount": {
+    "description": "Number of reviews",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "entriesCount": "{count} entries",
+  "@entriesCount": {
+    "description": "Number of transaction entries",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "termsDisclaimer": "By continuing, you agree to our Terms of Service\nand Privacy Policy",
+  "@termsDisclaimer": {},
+
+  "welcomeAstrologer": "Welcome,\nAstrologer",
+  "@welcomeAstrologer": {},
+
+  "enterMobileNumber": "Enter your mobile number to continue",
+  "@enterMobileNumber": {},
+
+  "sendOtp": "Send OTP",
+  "@sendOtp": {},
+
+  "signInWithEmail": "Sign in with Email",
+  "@signInWithEmail": {},
+
+  "mobileNumber": "Mobile Number",
+  "@mobileNumber": {},
+
+  "mobileNumberHint": "98765 43210",
+  "@mobileNumberHint": {},
+
+  "enterOtp": "Enter OTP",
+  "@enterOtp": {},
+
+  "otpSentTo": "We sent a 6-digit code to ",
+  "@otpSentTo": { "description": "Prefix before the masked phone/email" },
+
+  "otpInvalidError": "Incorrect code. Please try again.",
+  "@otpInvalidError": {},
+
+  "otpExpiredError": "Code expired. Request a new one.",
+  "@otpExpiredError": {},
+
+  "otpAttemptsError": "Too many wrong attempts. Request a new code.",
+  "@otpAttemptsError": {},
+
+  "verify": "Verify",
+  "@verify": {},
+
+  "resendCountdown": "Resend code in 0:{seconds}",
+  "@resendCountdown": {
+    "placeholders": {
+      "seconds": { "type": "String" }
+    }
+  },
+
+  "resendCode": "Resend code",
+  "@resendCode": {},
+
+  "emailSignInTitle": "Email Sign In",
+  "@emailSignInTitle": {},
+
+  "signInTab": "Sign In",
+  "@signInTab": {},
+
+  "registerTab": "Register",
+  "@registerTab": {},
+
+  "signInToAccount": "Sign in to your account",
+  "@signInToAccount": {},
+
+  "enterCredentials": "Enter your credentials to continue",
+  "@enterCredentials": {},
+
+  "emailAddress": "Email address",
+  "@emailAddress": {},
+
+  "emailHint": "you@example.com",
+  "@emailHint": {},
+
+  "password": "Password",
+  "@password": {},
+
+  "forgotPassword": "Forgot password?",
+  "@forgotPassword": {},
+
+  "passwordRequired": "Password is required",
+  "@passwordRequired": {},
+
+  "createYourAccount": "Create your account",
+  "@createYourAccount": {},
+
+  "joinAsPro": "Join as a professional astrologer",
+  "@joinAsPro": {},
+
+  "fullName": "Full Name",
+  "@fullName": {},
+
+  "fullNameHint": "Pandit Rajesh Sharma",
+  "@fullNameHint": {},
+
+  "passwordHint": "Min 8 chars, one uppercase, one digit",
+  "@passwordHint": {},
+
+  "createAccountButton": "Create Account",
+  "@createAccountButton": {},
+
+  "emailVerificationNotice": "We'll send a verification code to your email",
+  "@emailVerificationNotice": {},
+
+  "navHome": "Home",
+  "@navHome": {},
+
+  "navConsults": "Consults",
+  "@navConsults": {},
+
+  "navEarnings": "Earnings",
+  "@navEarnings": {},
+
+  "navProfile": "Profile",
+  "@navProfile": {},
+
+  "goodMorning": "Good morning!",
+  "@goodMorning": {},
+
+  "todaysOverview": "Today's Overview",
+  "@todaysOverview": {},
+
+  "todaysEarnings": "Today's Earnings",
+  "@todaysEarnings": {},
+
+  "thisWeek": "This Week",
+  "@thisWeek": {},
+
+  "totalConsults": "Total Consults",
+  "@totalConsults": {},
+
+  "rating": "Rating",
+  "@rating": {},
+
+  "quickActions": "Quick Actions",
+  "@quickActions": {},
+
+  "myProfile": "My Profile",
+  "@myProfile": {},
+
+  "earnings": "Earnings",
+  "@earnings": {},
+
+  "consults": "Consults",
+  "@consults": {},
+
+  "recentConsultations": "Recent Consultations",
+  "@recentConsultations": {},
+
+  "youAreOnline": "You are Online",
+  "@youAreOnline": {},
+
+  "youAreOffline": "You are Offline",
+  "@youAreOffline": {},
+
+  "customersCanSeeYou": "Customers can see and contact you",
+  "@customersCanSeeYou": {},
+
+  "toggleToReceive": "Toggle to start receiving requests",
+  "@toggleToReceive": {},
+
+  "consultationsTitle": "Consultations",
+  "@consultationsTitle": {},
+
+  "allTab": "All",
+  "@allTab": {},
+
+  "completedTab": "Completed",
+  "@completedTab": {},
+
+  "pendingTab": "Pending",
+  "@pendingTab": {},
+
+  "noConsultationsYet": "No consultations yet",
+  "@noConsultationsYet": {},
+
+  "goOnlineHint": "Go online to start receiving requests",
+  "@goOnlineHint": {},
+
+  "consultationDetailTitle": "Consultation Detail",
+  "@consultationDetailTitle": {},
+
+  "chatConsultation": "Chat Consultation",
+  "@chatConsultation": {},
+
+  "startedLabel": "Started",
+  "@startedLabel": {},
+
+  "durationLabel": "Duration",
+  "@durationLabel": {},
+
+  "rateLabel": "Rate",
+  "@rateLabel": {},
+
+  "yourEarnings": "Your Earnings",
+  "@yourEarnings": {},
+
+  "customerPaid": "Customer paid",
+  "@customerPaid": {},
+
+  "customerLabel": "Customer",
+  "@customerLabel": {},
+
+  "activeConsultation": "Active consultation",
+  "@activeConsultation": {},
+
+  "endConsultationTitle": "End Consultation?",
+  "@endConsultationTitle": {},
+
+  "endConsultationBody": "Are you sure you want to end this consultation?",
+  "@endConsultationBody": {},
+
+  "endButton": "End",
+  "@endButton": {},
+
+  "typeMessage": "Type a message...",
+  "@typeMessage": {},
+
+  "earningsTitle": "Earnings",
+  "@earningsTitle": {},
+
+  "export": "Export",
+  "@export": {},
+
+  "thisMonth": "This Month",
+  "@thisMonth": {},
+
+  "allTime": "All Time",
+  "@allTime": {},
+
+  "grossRevenue": "Gross Revenue",
+  "@grossRevenue": {},
+
+  "platformFee": "Platform Fee",
+  "@platformFee": {},
+
+  "lastPayoutProcessed": "Last Payout Processed",
+  "@lastPayoutProcessed": {},
+
+  "history": "History",
+  "@history": {},
+
+  "transactionHistory": "Transaction History",
+  "@transactionHistory": {},
+
+  "editProfileTitle": "Edit Profile",
+  "@editProfileTitle": {},
+
+  "reviewsRatings": "Reviews & Ratings",
+  "@reviewsRatings": {},
+
+  "kycStatus": "KYC Status",
+  "@kycStatus": {},
+
+  "kycApproved": "Approved",
+  "@kycApproved": {},
+
+  "bankPayoutDetails": "Bank & Payout Details",
+  "@bankPayoutDetails": {},
+
+  "accountSection": "Account",
+  "@accountSection": {},
+
+  "preferencesSection": "Preferences",
+  "@preferencesSection": {},
+
+  "notificationSettings": "Notification Settings",
+  "@notificationSettings": {},
+
+  "languagesLabel": "Languages",
+  "@languagesLabel": {},
+
+  "appearance": "Appearance",
+  "@appearance": {},
+
+  "darkTheme": "Dark",
+  "@darkTheme": {},
+
+  "supportSection": "Support",
+  "@supportSection": {},
+
+  "helpFaq": "Help & FAQ",
+  "@helpFaq": {},
+
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {},
+
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {},
+
+  "appVersion": "App Version",
+  "@appVersion": {},
+
+  "signOut": "Sign Out",
+  "@signOut": {},
+
+  "signOutTitle": "Sign Out?",
+  "@signOutTitle": {},
+
+  "signOutBody": "You will be signed out of your account.",
+  "@signOutBody": {},
+
+  "displayName": "Display Name",
+  "@displayName": {},
+
+  "displayNameHint": "How customers will see you",
+  "@displayNameHint": {},
+
+  "bioLabel": "Bio",
+  "@bioLabel": {},
+
+  "bioHint": "Tell customers about yourself",
+  "@bioHint": {},
+
+  "yearsExperience": "Years of Experience",
+  "@yearsExperience": {},
+
+  "basicInfo": "Basic Info",
+  "@basicInfo": {},
+
+  "specialties": "Specialties",
+  "@specialties": {},
+
+  "pricingPerMin": "Pricing (₹ per minute)",
+  "@pricingPerMin": {},
+
+  "chatRateLabel": "Chat Rate (₹/min)",
+  "@chatRateLabel": {},
+
+  "callRateLabel": "Call Rate (₹/min)",
+  "@callRateLabel": {},
+
+  "saveChanges": "Save Changes",
+  "@saveChanges": {},
+
+  "profileUpdated": "Profile updated successfully",
+  "@profileUpdated": {},
+
+  "notificationsTitle": "Notifications",
+  "@notificationsTitle": {},
+
+  "markAllRead": "Mark all read",
+  "@markAllRead": {},
+
+  "noNotificationsYet": "No notifications yet",
+  "@noNotificationsYet": {},
+
+  "notificationsHint": "You'll be notified about consultations,\nearnings, and platform updates",
+  "@notificationsHint": {},
+
+  "settingsTitle": "Settings",
+  "@settingsTitle": {},
+
+  "notificationPreferences": "Notification Preferences",
+  "@notificationPreferences": {},
+
+  "chatRequests": "Chat Requests",
+  "@chatRequests": {},
+
+  "chatRequestsDesc": "New incoming chat consultations",
+  "@chatRequestsDesc": {},
+
+  "callRequests": "Call Requests",
+  "@callRequests": {},
+
+  "callRequestsDesc": "Incoming voice & video calls",
+  "@callRequestsDesc": {},
+
+  "kundliRequests": "Kundli Requests",
+  "@kundliRequests": {},
+
+  "kundliRequestsDesc": "New Kundli report requests",
+  "@kundliRequestsDesc": {},
+
+  "earningsUpdates": "Earnings Updates",
+  "@earningsUpdates": {},
+
+  "earningsUpdatesDesc": "Payouts and credit alerts",
+  "@earningsUpdatesDesc": {},
+
+  "platformUpdates": "Platform Updates",
+  "@platformUpdates": {},
+
+  "platformUpdatesDesc": "News, features, and announcements",
+  "@platformUpdatesDesc": {},
+
+  "alertStyle": "Alert Style",
+  "@alertStyle": {},
+
+  "sound": "Sound",
+  "@sound": {},
+
+  "vibration": "Vibration",
+  "@vibration": {},
+
+  "securitySection": "Security",
+  "@securitySection": {},
+
+  "changePassword": "Change Password",
+  "@changePassword": {},
+
+  "activeSessions": "Active Sessions",
+  "@activeSessions": {},
+
+  "aboutSection": "About",
+  "@aboutSection": {},
+
+  "rateApp": "Rate the App",
+  "@rateApp": {},
+
+  "buildProfile": "Build your profile",
+  "@buildProfile": {},
+
+  "buildProfileSubtitle": "Customers see this. Make it compelling.",
+  "@buildProfileSubtitle": {},
+
+  "nameAlias": "Your name / alias",
+  "@nameAlias": {},
+
+  "nameAliasHint": "e.g. Pandit Rajesh Ji",
+  "@nameAliasHint": {},
+
+  "bioDescHint": "Brief description of your expertise and approach...",
+  "@bioDescHint": {},
+
+  "yourSpecialties": "Your specialties",
+  "@yourSpecialties": {},
+
+  "specialtiesHint": "Select at least one. This helps customers find you.",
+  "@specialtiesHint": {},
+
+  "languagesYouSpeak": "Languages you speak",
+  "@languagesYouSpeak": {},
+
+  "languagesHint": "Customers filter by language. More = more reach.",
+  "@languagesHint": {},
+
+  "setYourRates": "Set your rates",
+  "@setYourRates": {},
+
+  "ratesSubtitle": "You keep 70% of what customers pay. These are your per-minute rates.",
+  "@ratesSubtitle": {},
+
+  "chatRateTitle": "Chat Rate",
+  "@chatRateTitle": {},
+
+  "chatRateDesc": "Per minute for text consultations",
+  "@chatRateDesc": {},
+
+  "callRateTitle": "Call Rate",
+  "@callRateTitle": {},
+
+  "callRateDesc": "Per minute for voice consultations",
+  "@callRateDesc": {},
+
+  "minRateHint": "Minimum rate is ₹20/min. You can change this anytime from your profile.",
+  "@minRateHint": {},
+
+  "continueButton": "Continue",
+  "@continueButton": {},
+
+  "getStarted": "Get Started 🚀",
+  "@getStarted": {}
+}
