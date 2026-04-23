@@ -1,4 +1,4 @@
-package com.gsrkhvk.partner_app
+package com.gsc.qb.austro.astrologer
 
 import io.flutter.embedding.android.FlutterActivity
 
