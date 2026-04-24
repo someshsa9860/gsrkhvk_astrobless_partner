@@ -298,7 +298,7 @@ class _PayoutSection extends ConsumerWidget {
                       style: tt.bodySmall?.copyWith(color: AppColors.textSecondary),
                     ),
                     Text(
-                      '${formatPaiseExact(last.amountPaise)} on ${formatDate(last.processedAt ?? last.periodEnd)}',
+                      '${formatPaiseExact(last.amount)} on ${formatDate(last.processedAt ?? last.periodEnd)}',
                       style: tt.titleSmall?.copyWith(
                         color: AppColors.success,
                         fontWeight: FontWeight.w600,
@@ -375,7 +375,7 @@ class _TransactionRow extends StatelessWidget {
             ),
           ),
           Text(
-            '+${formatPaise(tx.netPaise)}',
+            '+${formatPaise(tx.net)}',
             style: tt.titleSmall?.copyWith(
               color: AppColors.accent,
               fontWeight: FontWeight.w700,

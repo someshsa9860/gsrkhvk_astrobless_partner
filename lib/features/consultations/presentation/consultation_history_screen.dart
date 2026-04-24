@@ -152,9 +152,9 @@ class _ConsultationCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (consultation.astrologerEarningPaise > 0)
+                if (consultation.astrologerEarning > 0)
                   Text(
-                    '+${formatPaise(consultation.astrologerEarningPaise)}',
+                    '+${formatPaise(consultation.astrologerEarning)}',
                     style: tt.titleSmall?.copyWith(
                           color: AppColors.accent,
                           fontWeight: FontWeight.w600,

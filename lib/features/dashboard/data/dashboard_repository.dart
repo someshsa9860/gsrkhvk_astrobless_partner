@@ -22,8 +22,8 @@ class DashboardRepository {
     final profileData = results[1];
 
     return DashboardSummary(
-      todayEarningsPaise: earningsData['todayPaise'] as int? ?? 0,
-      weekEarningsPaise: earningsData['weekPaise'] as int? ?? 0,
+      todayEarnings: earningsData['todayPaise'] as int? ?? 0,
+      weekEarnings: earningsData['weekPaise'] as int? ?? 0,
       totalConsultations: profileData['totalConsultations'] as int? ?? 0,
       activeConsultations: 0,
       ratingAvg: (profileData['ratingAvg'] as num?)?.toDouble() ?? 0.0,

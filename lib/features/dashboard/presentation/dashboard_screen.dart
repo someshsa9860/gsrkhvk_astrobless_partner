@@ -214,7 +214,7 @@ class _StatsSection extends StatelessWidget {
             Expanded(
               child: _StatCard(
                 label: l10n.todaysEarnings,
-                value: formatPaise(data.todayEarningsPaise as int),
+                value: formatPaise(data.todayEarnings as int),
                 icon: Icons.account_balance_wallet_outlined,
                 color: AppColors.accent,
                 delay: 200,
@@ -224,7 +224,7 @@ class _StatsSection extends StatelessWidget {
             Expanded(
               child: _StatCard(
                 label: l10n.thisWeek,
-                value: formatPaise(data.weekEarningsPaise as int),
+                value: formatPaise(data.weekEarnings as int),
                 icon: Icons.trending_up_rounded,
                 color: AppColors.primary,
                 delay: 250,

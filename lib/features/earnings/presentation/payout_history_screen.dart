@@ -136,7 +136,7 @@ class _PayoutCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      formatPaiseExact(payout.amountPaise),
+                      formatPaiseExact(payout.amount),
                       style: tt.titleMedium?.copyWith(
                         color: statusColor,
                         fontWeight: FontWeight.w700,

@@ -4,13 +4,13 @@ class Consultation {
     required this.customerName,
     required this.type,
     required this.status,
-    required this.pricePerMinPaise,
+    required this.pricePerMin,
     required this.requestedAt,
     this.startedAt,
     this.endedAt,
     this.durationSeconds = 0,
-    this.totalChargedPaise = 0,
-    this.astrologerEarningPaise = 0,
+    this.totalCharged = 0,
+    this.astrologerEarning = 0,
     this.customerProfileUrl,
     this.endReason,
   });
@@ -19,13 +19,13 @@ class Consultation {
   final String customerName;
   final String type;   // chat | voice | video | kundli
   final String status; // requested | accepted | active | ended | rejected | cancelled
-  final int pricePerMinPaise;
+  final int pricePerMin;
   final DateTime requestedAt;
   final DateTime? startedAt;
   final DateTime? endedAt;
   final int durationSeconds;
-  final int totalChargedPaise;
-  final int astrologerEarningPaise;
+  final int totalCharged;
+  final int astrologerEarning;
   final String? customerProfileUrl;
   final String? endReason;
 
@@ -35,13 +35,13 @@ class Consultation {
       customerName: json['customerName'] as String? ?? 'Customer',
       type: json['type'] as String,
       status: json['status'] as String,
-      pricePerMinPaise: json['pricePerMinPaise'] as int,
+      pricePerMin: json['pricePerMin'] as int,
       requestedAt: DateTime.parse(json['requestedAt'] as String),
       startedAt: json['startedAt'] != null ? DateTime.parse(json['startedAt'] as String) : null,
       endedAt: json['endedAt'] != null ? DateTime.parse(json['endedAt'] as String) : null,
       durationSeconds: json['durationSeconds'] as int? ?? 0,
-      totalChargedPaise: json['totalChargedPaise'] as int? ?? 0,
-      astrologerEarningPaise: json['astrologerEarningPaise'] as int? ?? 0,
+      totalCharged: json['totalCharged'] as int? ?? 0,
+      astrologerEarning: json['astrologerEarning'] as int? ?? 0,
       customerProfileUrl: json['customerProfileUrl'] as String?,
       endReason: json['endReason'] as String?,
     );
@@ -104,7 +104,7 @@ class IncomingRequest {
     required this.customerId,
     required this.customerName,
     required this.type,
-    required this.pricePerMinPaise,
+    required this.pricePerMin,
     this.customerProfileUrl,
   });
 
@@ -112,7 +112,7 @@ class IncomingRequest {
   final String customerId;
   final String customerName;
   final String type; // chat | voice | video
-  final int pricePerMinPaise;
+  final int pricePerMin;
   final String? customerProfileUrl;
 
   factory IncomingRequest.fromJson(Map<String, dynamic> json) {
@@ -121,7 +121,7 @@ class IncomingRequest {
       customerId: json['customerId'] as String,
       customerName: json['customerName'] as String? ?? 'Customer',
       type: json['type'] as String? ?? 'chat',
-      pricePerMinPaise: json['pricePerMinPaise'] as int? ?? 0,
+      pricePerMin: json['pricePerMin'] as int? ?? 0,
       customerProfileUrl: json['customerProfileUrl'] as String?,
     );
   }
@@ -131,18 +131,18 @@ class BillingTick {
   const BillingTick({
     required this.consultationId,
     required this.remainingSeconds,
-    required this.balancePaise,
+    required this.balance,
   });
 
   final String consultationId;
   final int remainingSeconds;
-  final int balancePaise;
+  final int balance;
 
   factory BillingTick.fromJson(Map<String, dynamic> json) {
     return BillingTick(
       consultationId: json['consultationId'] as String,
       remainingSeconds: json['remainingSeconds'] as int,
-      balancePaise: json['balancePaise'] as int,
+      balance: json['balance'] as int,
     );
   }
 }

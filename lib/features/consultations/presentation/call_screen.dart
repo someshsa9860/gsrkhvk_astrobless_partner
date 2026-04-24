@@ -239,7 +239,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                         const Icon(Icons.timer_outlined, size: 14, color: AppColors.primary),
                         const SizedBox(width: 6),
                         Text(
-                          '${(_lastTick!.remainingSeconds ~/ 60)}m left · ₹${(_lastTick!.balancePaise / 100).toStringAsFixed(0)} balance',
+                          '${(_lastTick!.remainingSeconds ~/ 60)}m left · ₹${(_lastTick!.balance / 100).toStringAsFixed(0)} balance',
                           style: tt.labelMedium?.copyWith(color: AppColors.primary),
                         ),
                       ],

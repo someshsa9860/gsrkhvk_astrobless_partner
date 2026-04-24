@@ -182,12 +182,12 @@ class ApiClient {
 
   /// Updates per-minute chat and call pricing.
   Future<void> updatePricing({
-    required int pricePerMinChatPaise,
-    required int pricePerMinCallPaise,
+    required int pricePerMinChat,
+    required int pricePerMinCall,
   }) async {
     await patch(Endpoints.profile.pricing, data: {
-      'pricePerMinChatPaise': pricePerMinChatPaise,
-      'pricePerMinCallPaise': pricePerMinCallPaise,
+      'pricePerMinChat': pricePerMinChat,
+      'pricePerMinCall': pricePerMinCall,
     });
   }
 

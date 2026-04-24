@@ -9,8 +9,8 @@ Map<String, dynamic> get fullAstrologerJson => {
       'isNewUser': false,
       'isOnline': true,
       'isVerified': true,
-      'pricePerMinChatPaise': 300,
-      'pricePerMinCallPaise': 500,
+      'pricePerMinChat': 300,
+      'pricePerMinCall': 500,
     };
 
 void main() {
@@ -25,8 +25,8 @@ void main() {
       expect(a.isNewUser, isFalse);
       expect(a.isOnline, isTrue);
       expect(a.isVerified, isTrue);
-      expect(a.pricePerMinChatPaise, 300);
-      expect(a.pricePerMinCallPaise, 500);
+      expect(a.pricePerMinChat, 300);
+      expect(a.pricePerMinCall, 500);
     });
 
     test('defaults optional fields when absent', () {
@@ -37,14 +37,14 @@ void main() {
       expect(a.isNewUser, isFalse);
       expect(a.isOnline, isFalse);
       expect(a.isVerified, isFalse);
-      expect(a.pricePerMinChatPaise, 0);
-      expect(a.pricePerMinCallPaise, 0);
+      expect(a.pricePerMinChat, 0);
+      expect(a.pricePerMinCall, 0);
     });
 
     test('prices are stored as int (paise)', () {
       final a = AstrologerSummary.fromJson(fullAstrologerJson);
-      expect(a.pricePerMinChatPaise, isA<int>());
-      expect(a.pricePerMinCallPaise, isA<int>());
+      expect(a.pricePerMinChat, isA<int>());
+      expect(a.pricePerMinCall, isA<int>());
     });
 
     test('isNewUser parsed as true when present', () {

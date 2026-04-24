@@ -174,7 +174,7 @@ class _IncomingRequestSheetState extends ConsumerState<IncomingRequestSheet> {
             const SizedBox(height: 4),
 
             Text(
-              '₹${(req.pricePerMinPaise / 100).toStringAsFixed(0)}/min',
+              '₹${(req.pricePerMin / 100).toStringAsFixed(0)}/min',
               style: tt.bodyLarge?.copyWith(
                 color: AppColors.accent,
                 fontWeight: FontWeight.w600,

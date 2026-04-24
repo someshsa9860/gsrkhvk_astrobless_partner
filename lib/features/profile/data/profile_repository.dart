@@ -43,12 +43,12 @@ class ProfileRepository {
 
   /// Updates per-minute chat and call pricing (stored as paise).
   Future<void> updatePricing({
-    required int pricePerMinChatPaise,
-    required int pricePerMinCallPaise,
+    required int pricePerMinChat,
+    required int pricePerMinCall,
   }) async {
     await _client.updatePricing(
-      pricePerMinChatPaise: pricePerMinChatPaise,
-      pricePerMinCallPaise: pricePerMinCallPaise,
+      pricePerMinChat: pricePerMinChat,
+      pricePerMinCall: pricePerMinCall,
     );
   }
 }

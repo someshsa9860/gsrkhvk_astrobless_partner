@@ -11,11 +11,11 @@ Map<String, dynamic> consultationJson(String id, String status) => {
       'customerName': 'Rahul',
       'type': 'chat',
       'status': status,
-      'pricePerMinPaise': 300,
+      'pricePerMin': 300,
       'requestedAt': '2026-04-10T10:00:00.000Z',
       'durationSeconds': 0,
-      'totalChargedPaise': 0,
-      'astrologerEarningPaise': 0,
+      'totalCharged': 0,
+      'astrologerEarning': 0,
     };
 
 Map<String, dynamic> messageJson(String id, String body) => {

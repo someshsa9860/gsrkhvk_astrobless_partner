@@ -7,8 +7,8 @@ class AstrologerSummary {
     this.isNewUser = false,
     this.isOnline = false,
     this.isVerified = false,
-    this.pricePerMinChatPaise = 0,
-    this.pricePerMinCallPaise = 0,
+    this.pricePerMinChat = 0,
+    this.pricePerMinCall = 0,
   });
 
   final String id;
@@ -18,8 +18,8 @@ class AstrologerSummary {
   final bool isNewUser;
   final bool isOnline;
   final bool isVerified;
-  final int pricePerMinChatPaise;
-  final int pricePerMinCallPaise;
+  final int pricePerMinChat;
+  final int pricePerMinCall;
 
   factory AstrologerSummary.fromJson(Map<String, dynamic> json) {
     return AstrologerSummary(
@@ -30,8 +30,8 @@ class AstrologerSummary {
       isNewUser: json['isNewUser'] as bool? ?? false,
       isOnline: json['isOnline'] as bool? ?? false,
       isVerified: json['isVerified'] as bool? ?? false,
-      pricePerMinChatPaise: json['pricePerMinChatPaise'] as int? ?? 0,
-      pricePerMinCallPaise: json['pricePerMinCallPaise'] as int? ?? 0,
+      pricePerMinChat: json['pricePerMinChat'] as int? ?? 0,
+      pricePerMinCall: json['pricePerMinCall'] as int? ?? 0,
     );
   }
 }

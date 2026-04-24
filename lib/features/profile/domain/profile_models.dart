@@ -7,8 +7,8 @@ class AstrologerProfile {
     required this.ratingAvg,
     required this.ratingCount,
     required this.totalConsultations,
-    required this.pricePerMinChatPaise,
-    required this.pricePerMinCallPaise,
+    required this.pricePerMinChat,
+    required this.pricePerMinCall,
     this.bio,
     this.profileImageUrl,
     this.languages = const [],
@@ -25,8 +25,8 @@ class AstrologerProfile {
   final double ratingAvg;
   final int ratingCount;
   final int totalConsultations;
-  final int pricePerMinChatPaise;
-  final int pricePerMinCallPaise;
+  final int pricePerMinChat;
+  final int pricePerMinCall;
   final String? bio;
   final String? profileImageUrl;
   final List<String> languages;
@@ -44,8 +44,8 @@ class AstrologerProfile {
       ratingAvg: (json['ratingAvg'] as num?)?.toDouble() ?? 0.0,
       ratingCount: json['ratingCount'] as int? ?? 0,
       totalConsultations: json['totalConsultations'] as int? ?? 0,
-      pricePerMinChatPaise: json['pricePerMinChatPaise'] as int? ?? 3000,
-      pricePerMinCallPaise: json['pricePerMinCallPaise'] as int? ?? 4000,
+      pricePerMinChat: json['pricePerMinChat'] as int? ?? 3000,
+      pricePerMinCall: json['pricePerMinCall'] as int? ?? 4000,
       bio: json['bio'] as String?,
       profileImageUrl: json['profileImageUrl'] as String?,
       languages: (json['languages'] as List<dynamic>?)?.cast<String>() ?? [],

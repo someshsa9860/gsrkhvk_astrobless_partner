@@ -1,15 +1,15 @@
 class DashboardSummary {
   const DashboardSummary({
-    required this.todayEarningsPaise,
-    required this.weekEarningsPaise,
+    required this.todayEarnings,
+    required this.weekEarnings,
     required this.totalConsultations,
     required this.activeConsultations,
     required this.ratingAvg,
     required this.isOnline,
   });
 
-  final int todayEarningsPaise;
-  final int weekEarningsPaise;
+  final int todayEarnings;
+  final int weekEarnings;
   final int totalConsultations;
   final int activeConsultations;
   final double ratingAvg;
@@ -17,8 +17,8 @@ class DashboardSummary {
 
   factory DashboardSummary.fromJson(Map<String, dynamic> json) {
     return DashboardSummary(
-      todayEarningsPaise: json['todayEarningsPaise'] as int? ?? 0,
-      weekEarningsPaise: json['weekEarningsPaise'] as int? ?? 0,
+      todayEarnings: json['todayEarnings'] as int? ?? 0,
+      weekEarnings: json['weekEarnings'] as int? ?? 0,
       totalConsultations: json['totalConsultations'] as int? ?? 0,
       activeConsultations: json['activeConsultations'] as int? ?? 0,
       ratingAvg: (json['ratingAvg'] as num?)?.toDouble() ?? 0.0,
@@ -27,8 +27,8 @@ class DashboardSummary {
   }
 
   Map<String, dynamic> toJson() => {
-        'todayEarningsPaise': todayEarningsPaise,
-        'weekEarningsPaise': weekEarningsPaise,
+        'todayEarnings': todayEarnings,
+        'weekEarnings': weekEarnings,
         'totalConsultations': totalConsultations,
         'activeConsultations': activeConsultations,
         'ratingAvg': ratingAvg,
@@ -37,8 +37,8 @@ class DashboardSummary {
 
   DashboardSummary copyWith({bool? isOnline}) {
     return DashboardSummary(
-      todayEarningsPaise: todayEarningsPaise,
-      weekEarningsPaise: weekEarningsPaise,
+      todayEarnings: todayEarnings,
+      weekEarnings: weekEarnings,
       totalConsultations: totalConsultations,
       activeConsultations: activeConsultations,
       ratingAvg: ratingAvg,
