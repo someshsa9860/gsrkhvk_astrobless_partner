@@ -41,7 +41,7 @@ class ProfileRepository {
     await _client.setPresence(isOnline);
   }
 
-  /// Updates per-minute chat and call pricing (stored as paise).
+  /// Updates per-minute chat and call pricing.
   Future<void> updatePricing({
     required int pricePerMinChat,
     required int pricePerMinCall,

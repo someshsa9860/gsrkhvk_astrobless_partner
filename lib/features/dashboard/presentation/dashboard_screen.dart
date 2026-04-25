@@ -214,7 +214,7 @@ class _StatsSection extends StatelessWidget {
             Expanded(
               child: _StatCard(
                 label: l10n.todaysEarnings,
-                value: formatPaise(data.todayEarnings as int),
+                value: formatCurrency(data.todayEarnings),
                 icon: Icons.account_balance_wallet_outlined,
                 color: AppColors.accent,
                 delay: 200,
@@ -224,7 +224,7 @@ class _StatsSection extends StatelessWidget {
             Expanded(
               child: _StatCard(
                 label: l10n.thisWeek,
-                value: formatPaise(data.weekEarnings as int),
+                value: formatCurrency(data.weekEarnings),
                 icon: Icons.trending_up_rounded,
                 color: AppColors.primary,
                 delay: 250,
@@ -388,9 +388,9 @@ class _RecentActivity extends StatelessWidget {
   const _RecentActivity();
 
   static const _mock = [
-    (name: 'Priya M.', type: 'Chat', duration: '18 min', paise: 54000, status: 'completed'),
-    (name: 'Arjun S.', type: 'Voice', duration: '32 min', paise: 128000, status: 'completed'),
-    (name: 'Sunita K.', type: 'Kundli', duration: '', paise: 50000, status: 'pending'),
+    (name: 'Priya M.', type: 'Chat', duration: '18 min', amount: 540.0, status: 'completed'),
+    (name: 'Arjun S.', type: 'Voice', duration: '32 min', amount: 1280.0, status: 'completed'),
+    (name: 'Sunita K.', type: 'Kundli', duration: '', amount: 500.0, status: 'pending'),
   ];
 
   @override
@@ -419,7 +419,7 @@ class _RecentActivity extends StatelessWidget {
                   name: e.value.name,
                   type: e.value.type,
                   duration: e.value.duration,
-                  paise: e.value.paise,
+                  amount: e.value.amount,
                   status: e.value.status,
                 ).animate().fadeIn(delay: Duration(milliseconds: 500 + e.key * 80)),
               ),
@@ -434,14 +434,14 @@ class _ConsultationTile extends StatelessWidget {
     required this.name,
     required this.type,
     required this.duration,
-    required this.paise,
+    required this.amount,
     required this.status,
   });
 
   final String name;
   final String type;
   final String duration;
-  final int paise;
+  final double amount;
   final String status;
 
   @override
@@ -491,7 +491,7 @@ class _ConsultationTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                formatPaise(paise),
+                formatCurrency(amount),
                 style: tt.titleSmall?.copyWith(color: AppColors.accent, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),

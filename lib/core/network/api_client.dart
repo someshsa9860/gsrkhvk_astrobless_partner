@@ -113,6 +113,11 @@ class ApiClient {
     });
   }
 
+  /// Resends the email verification OTP (rate-limited: 3/hr/email).
+  Future<void> resendEmailOtp(String email) async {
+    await post(Endpoints.auth.resendEmailOtp, data: {'email': email});
+  }
+
   /// Verifies the email OTP and returns a raw data map with tokens.
   Future<Map<String, dynamic>> verifyEmailOtp(
       String email, String otp) async {

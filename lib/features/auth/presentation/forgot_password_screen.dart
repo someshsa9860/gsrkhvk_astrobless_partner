@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/validators.dart';
+import '../../../l10n/app_localizations.dart';
 import 'auth_controller.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
@@ -31,12 +34,15 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       await ref.read(authControllerProvider.notifier).forgotPassword(_emailCtrl.text.trim());
       if (mounted) setState(() { _loading = false; _sent = true; });
     } catch (e) {
-      if (mounted) {
-        setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
-      }
+      if (mounted) setState(() => _loading = false);
+      Get.showSnackbar(GetSnackBar(
+        message: e.toString().replaceAll('Exception:', '').trim(),
+        backgroundColor: AppColors.error,
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
+        snackPosition: SnackPosition.BOTTOM,
+      ));
     }
   }
 
@@ -50,7 +56,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Forgot Password'),
+        title: Text(AppLocalizations.of(context).forgotPassword),
       ),
       body: SafeArea(
         child: Padding(
@@ -84,6 +90,7 @@ class _FormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final tt = Theme.of(context).textTheme;
 
     return Form(
@@ -103,12 +110,12 @@ class _FormView extends StatelessWidget {
           ).animate().fadeIn().scale(),
           const SizedBox(height: 20),
           Text(
-            'Reset your password',
+            l10n.forgotPassword,
             style: tt.headlineSmall?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
           ).animate().fadeIn(delay: 100.ms),
           const SizedBox(height: 8),
           Text(
-            "Enter the email address linked to your account. We'll send a password reset link.",
+            "Enter the email address linked to your account. We'll send a reset code.",
             style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary),
           ).animate().fadeIn(delay: 150.ms),
           const SizedBox(height: 32),
@@ -118,17 +125,13 @@ class _FormView extends StatelessWidget {
             textInputAction: TextInputAction.done,
             style: const TextStyle(color: AppColors.textPrimary),
             decoration: InputDecoration(
-              labelText: 'Email address',
+              labelText: l10n.emailAddress,
               prefixIcon: const Icon(Icons.email_outlined),
               filled: true,
               fillColor: AppColors.cardDark,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
             ),
-            validator: (v) {
-              if (v == null || v.trim().isEmpty) return 'Email is required';
-              if (!v.contains('@')) return 'Enter a valid email address';
-              return null;
-            },
+            validator: Validators.email,
             onFieldSubmitted: (_) => onSubmit(),
           ).animate().fadeIn(delay: 200.ms),
           const SizedBox(height: 24),
@@ -148,7 +151,7 @@ class _FormView extends StatelessWidget {
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
                   : const Text(
-                      'Send Reset Link',
+                      'Send Reset Code',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
                     ),
             ),

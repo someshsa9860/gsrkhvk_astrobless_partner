@@ -6,7 +6,7 @@ class KundliRequest {
     required this.status,
     required this.birthDate,
     required this.birthPlace,
-    required this.priceAtOrderPaise,
+    required this.priceAtOrder,
     required this.createdAt,
     this.birthTime,
     this.question,
@@ -20,7 +20,7 @@ class KundliRequest {
   final String status; // pending|accepted|inProgress|completed|declined|expired
   final DateTime birthDate;
   final String birthPlace;
-  final int priceAtOrderPaise;
+  final double priceAtOrder;
   final DateTime createdAt;
   final String? birthTime;
   final String? question;
@@ -35,7 +35,7 @@ class KundliRequest {
       status: json['status'] as String,
       birthDate: DateTime.parse(json['birthDate'] as String),
       birthPlace: json['birthPlace'] as String,
-      priceAtOrderPaise: json['priceAtOrderPaise'] as int? ?? 0,
+      priceAtOrder: (json['priceAtOrder'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(json['createdAt'] as String),
       birthTime: json['birthTime'] as String?,
       question: json['question'] as String?,

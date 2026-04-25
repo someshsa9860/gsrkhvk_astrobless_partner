@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_button.dart';
@@ -34,18 +36,23 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     final phone = '+91${_phoneController.text.trim()}';
     try {
       await ref.read(authControllerProvider.notifier).sendPhoneOtp(phone);
-      if (mounted) context.push('/auth/otp', extra: {'phone': phone});
+      if (mounted) context.push(AppRoutes.authOtp, extra: {'phone': phone});
     } catch (e) {
-      if (mounted) _showError(e.toString());
+      _showError(e.toString());
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), backgroundColor: AppColors.error),
-    );
+    Get.showSnackbar(GetSnackBar(
+      message: msg.replaceAll('Exception:', '').trim(),
+      backgroundColor: AppColors.error,
+      borderRadius: 12,
+      margin: const EdgeInsets.all(16),
+      duration: const Duration(seconds: 3),
+      snackPosition: SnackPosition.BOTTOM,
+    ));
   }
 
   @override
@@ -102,7 +109,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                 const SizedBox(height: 24),
                 AppButton(
                   label: l10n.signInWithEmail,
-                  onPressed: () => context.push('/auth/email'),
+                  onPressed: () => context.push(AppRoutes.authEmail),
                   variant: AppButtonVariant.outline,
                 ).animate().fadeIn(delay: 350.ms),
                 const SizedBox(height: 40),

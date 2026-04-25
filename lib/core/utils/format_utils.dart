@@ -1,19 +1,21 @@
 import 'package:intl/intl.dart';
 
-String formatPaise(int paise) {
-  final rupees = paise / 100;
-  if (rupees >= 100000) {
-    return '₹${(rupees / 100000).toStringAsFixed(2)}L';
-  } else if (rupees >= 1000) {
-    return '₹${(rupees / 1000).toStringAsFixed(1)}K';
+String formatMoney(double amount, {String currency = '₹'}) {
+  if (amount >= 100000) {
+    return '$currency${(amount / 100000).toStringAsFixed(2)}L';
+  } else if (amount >= 1000) {
+    return '$currency${(amount / 1000).toStringAsFixed(1)}K';
   }
-  return '₹${rupees.toStringAsFixed(0)}';
+  return '$currency${amount.toStringAsFixed(0)}';
 }
 
-String formatPaiseExact(int paise) {
-  final rupees = paise / 100;
-  return '₹${NumberFormat('#,##,##0.00').format(rupees)}';
+String formatMoneyExact(double amount, {String currency = '₹'}) {
+  return '$currency${NumberFormat('#,##,##0.00').format(amount)}';
 }
+
+// Backward-compatible aliases
+String formatCurrency(double amount) => formatMoney(amount);
+String formatCurrencyExact(double amount) => formatMoneyExact(amount);
 
 String formatDate(DateTime dt) => DateFormat('d MMM yyyy').format(dt);
 

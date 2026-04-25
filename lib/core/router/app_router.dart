@@ -23,27 +23,28 @@ import '../../features/kundli/presentation/kundli_request_list_screen.dart';
 import '../../features/kundli/presentation/kundli_request_detail_screen.dart';
 import '../../features/kundli/presentation/kundli_report_composer_screen.dart';
 import '../auth/token_storage.dart';
+import 'app_routes.dart';
 
 GoRouter buildRouter() {
   return GoRouter(
-    initialLocation: '/auth/phone',
+    initialLocation: AppRoutes.authPhone,
     redirect: (context, state) async {
       final hasTokens = await TokenStorage.hasTokens();
       final path = state.matchedLocation;
       final isAuthPath = path.startsWith('/auth');
 
-      if (!hasTokens && !isAuthPath) return '/auth/phone';
-      if (hasTokens && isAuthPath) return '/home';
+      if (!hasTokens && !isAuthPath) return AppRoutes.authPhone;
+      if (hasTokens && isAuthPath) return AppRoutes.home;
       return null;
     },
     routes: [
       // ── Auth ──────────────────────────────────────────────────────────
       GoRoute(
-        path: '/auth/phone',
+        path: AppRoutes.authPhone,
         builder: (_, __) => const PhoneAuthScreen(),
       ),
       GoRoute(
-        path: '/auth/otp',
+        path: AppRoutes.authOtp,
         builder: (_, state) {
           final extra = state.extra as Map<String, dynamic>? ?? {};
           return OtpScreen(
@@ -54,43 +55,43 @@ GoRouter buildRouter() {
         },
       ),
       GoRoute(
-        path: '/auth/email',
+        path: AppRoutes.authEmail,
         builder: (_, __) => const EmailAuthScreen(),
       ),
       GoRoute(
-        path: '/auth/forgot-password',
+        path: AppRoutes.authForgotPassword,
         builder: (_, __) => const ForgotPasswordScreen(),
       ),
 
       // ── Onboarding ────────────────────────────────────────────────────
       GoRoute(
-        path: '/onboarding',
+        path: AppRoutes.onboarding,
         builder: (_, __) => const OnboardingScreen(),
       ),
       GoRoute(
-        path: '/onboarding/kyc',
+        path: AppRoutes.onboardingKyc,
         builder: (_, __) => const KycScreen(),
       ),
 
       // ── Notifications ─────────────────────────────────────────────────
       GoRoute(
-        path: '/notifications',
+        path: AppRoutes.notifications,
         builder: (_, __) => const NotificationsScreen(),
       ),
 
       // ── Settings ──────────────────────────────────────────────────────
       GoRoute(
-        path: '/settings',
+        path: AppRoutes.settings,
         builder: (_, __) => const SettingsScreen(),
       ),
       GoRoute(
-        path: '/settings/change-password',
+        path: AppRoutes.settingsChangePassword,
         builder: (_, __) => const ChangePasswordScreen(),
       ),
 
       // ── Profile edit ──────────────────────────────────────────────────
       GoRoute(
-        path: '/profile/edit',
+        path: AppRoutes.profileEdit,
         builder: (_, __) => const EditProfileScreen(),
       ),
 
@@ -110,13 +111,13 @@ GoRouter buildRouter() {
 
       // ── Payout history ────────────────────────────────────────────────
       GoRoute(
-        path: '/earnings/payouts',
+        path: AppRoutes.earningsPayouts,
         builder: (_, __) => const PayoutHistoryScreen(),
       ),
 
       // ── Kundli requests ───────────────────────────────────────────────
       GoRoute(
-        path: '/kundli-requests',
+        path: AppRoutes.kundliRequests,
         builder: (_, __) => const KundliRequestListScreen(),
       ),
       GoRoute(
@@ -133,16 +134,16 @@ GoRouter buildRouter() {
         builder: (_, __, shell) => HomeShell(shell: shell),
         branches: [
           StatefulShellBranch(routes: [
-            GoRoute(path: '/home', builder: (_, __) => const DashboardScreen()),
+            GoRoute(path: AppRoutes.home, builder: (_, __) => const DashboardScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/consultations', builder: (_, __) => const ConsultationHistoryScreen()),
+            GoRoute(path: AppRoutes.consultations, builder: (_, __) => const ConsultationHistoryScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/earnings', builder: (_, __) => const EarningsScreen()),
+            GoRoute(path: AppRoutes.earnings, builder: (_, __) => const EarningsScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
+            GoRoute(path: AppRoutes.profile, builder: (_, __) => const ProfileScreen()),
           ]),
         ],
       ),

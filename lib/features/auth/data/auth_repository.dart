@@ -54,6 +54,15 @@ class AuthRepository {
     }
   }
 
+  /// Resends the email verification OTP (rate-limited: 3/hr/email).
+  Future<void> resendEmailOtp(String email) async {
+    try {
+      await _client.resendEmailOtp(email);
+    } on Exception catch (e) {
+      throw extractException(e);
+    }
+  }
+
   /// Authenticates with email + password.
   Future<LoginResult> emailLogin(String email, String password) async {
     try {

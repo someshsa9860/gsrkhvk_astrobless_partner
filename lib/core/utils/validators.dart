@@ -29,7 +29,7 @@ class Validators {
     return null;
   }
 
-  static String? paise(String? value) {
+  static String? amount(String? value) {
     if (value == null || value.trim().isEmpty) return 'Amount is required';
     final n = int.tryParse(value.replaceAll(',', ''));
     if (n == null || n <= 0) return 'Enter a valid amount';

@@ -154,7 +154,7 @@ class _ConsultationCard extends StatelessWidget {
               children: [
                 if (consultation.astrologerEarning > 0)
                   Text(
-                    '+${formatPaise(consultation.astrologerEarning)}',
+                    '+${formatCurrency(consultation.astrologerEarning)}',
                     style: tt.titleSmall?.copyWith(
                           color: AppColors.accent,
                           fontWeight: FontWeight.w600,

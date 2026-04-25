@@ -37,6 +37,9 @@ dependencies:
   # Icons
   cupertino_icons: ^1.0.8
 
+  # Snackbar / overlays (context-free toasts)
+  get: ^4.6.6
+
   # Utilities
   crypto: ^3.0.3
   intl: ^0.20.2

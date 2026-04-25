@@ -514,4 +514,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get getStarted => 'Get Started 🚀';
+
+  @override
+  String get resetPasswordTitle => 'Reset your password';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'Enter the email address linked to your account. We\'ll send a reset code.';
+
+  @override
+  String get sendResetCode => 'Send Reset Code';
+
+  @override
+  String get checkYourInbox => 'Check your inbox';
+
+  @override
+  String resetCodeSentTo(String email) {
+    return 'We sent a password reset code to\n$email';
+  }
+
+  @override
+  String get backToSignIn => 'Back to sign in';
+
+  @override
+  String get unmute => 'Unmute';
+
+  @override
+  String get mute => 'Mute';
+
+  @override
+  String get speaker => 'Speaker';
+
+  @override
+  String get callConnected => 'Connected';
+
+  @override
+  String get callConnecting => 'Connecting...';
+
+  @override
+  String get endCall => 'End Call';
+
+  @override
+  String get chatBillingBar => 'Billing per minute';
+
+  @override
+  String get incomingChatRequest => 'Incoming Chat Request';
+
+  @override
+  String get incomingCallRequest => 'Incoming Call Request';
+
+  @override
+  String get secondsLeft => 'seconds left';
+
+  @override
+  String get decline => 'Decline';
+
+  @override
+  String get accept => 'Accept';
 }

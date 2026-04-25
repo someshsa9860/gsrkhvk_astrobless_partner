@@ -1077,6 +1077,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get Started 🚀'**
   String get getStarted;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the email address linked to your account. We\'ll send a reset code.'**
+  String get resetPasswordSubtitle;
+
+  /// No description provided for @sendResetCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Code'**
+  String get sendResetCode;
+
+  /// No description provided for @checkYourInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your inbox'**
+  String get checkYourInbox;
+
+  /// No description provided for @resetCodeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a password reset code to\n{email}'**
+  String resetCodeSentTo(String email);
+
+  /// No description provided for @backToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign in'**
+  String get backToSignIn;
+
+  /// No description provided for @unmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get unmute;
+
+  /// No description provided for @mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get mute;
+
+  /// No description provided for @speaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaker'**
+  String get speaker;
+
+  /// No description provided for @callConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get callConnected;
+
+  /// No description provided for @callConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting...'**
+  String get callConnecting;
+
+  /// No description provided for @endCall.
+  ///
+  /// In en, this message translates to:
+  /// **'End Call'**
+  String get endCall;
+
+  /// No description provided for @chatBillingBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing per minute'**
+  String get chatBillingBar;
+
+  /// No description provided for @incomingChatRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming Chat Request'**
+  String get incomingChatRequest;
+
+  /// No description provided for @incomingCallRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming Call Request'**
+  String get incomingCallRequest;
+
+  /// No description provided for @secondsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'seconds left'**
+  String get secondsLeft;
+
+  /// No description provided for @decline.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get decline;
+
+  /// No description provided for @accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get accept;
 }
 
 class _AppLocalizationsDelegate

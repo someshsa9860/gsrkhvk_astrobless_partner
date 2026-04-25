@@ -227,7 +227,7 @@ class _RequestCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  formatPaiseExact(request.priceAtOrderPaise),
+                  formatCurrencyExact(request.priceAtOrder),
                   style: tt.bodySmall?.copyWith(
                     color: AppColors.accent,
                     fontWeight: FontWeight.w600,

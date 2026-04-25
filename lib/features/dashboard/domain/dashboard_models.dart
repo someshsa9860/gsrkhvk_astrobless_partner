@@ -8,8 +8,8 @@ class DashboardSummary {
     required this.isOnline,
   });
 
-  final int todayEarnings;
-  final int weekEarnings;
+  final double todayEarnings;
+  final double weekEarnings;
   final int totalConsultations;
   final int activeConsultations;
   final double ratingAvg;
@@ -17,8 +17,8 @@ class DashboardSummary {
 
   factory DashboardSummary.fromJson(Map<String, dynamic> json) {
     return DashboardSummary(
-      todayEarnings: json['todayEarnings'] as int? ?? 0,
-      weekEarnings: json['weekEarnings'] as int? ?? 0,
+      todayEarnings: (json['todayEarnings'] as num?)?.toDouble() ?? 0.0,
+      weekEarnings: (json['weekEarnings'] as num?)?.toDouble() ?? 0.0,
       totalConsultations: json['totalConsultations'] as int? ?? 0,
       activeConsultations: json['activeConsultations'] as int? ?? 0,
       ratingAvg: (json['ratingAvg'] as num?)?.toDouble() ?? 0.0,

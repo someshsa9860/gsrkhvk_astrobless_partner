@@ -19,13 +19,13 @@ class Consultation {
   final String customerName;
   final String type;   // chat | voice | video | kundli
   final String status; // requested | accepted | active | ended | rejected | cancelled
-  final int pricePerMin;
+  final double pricePerMin;
   final DateTime requestedAt;
   final DateTime? startedAt;
   final DateTime? endedAt;
   final int durationSeconds;
-  final int totalCharged;
-  final int astrologerEarning;
+  final double totalCharged;
+  final double astrologerEarning;
   final String? customerProfileUrl;
   final String? endReason;
 
@@ -35,13 +35,13 @@ class Consultation {
       customerName: json['customerName'] as String? ?? 'Customer',
       type: json['type'] as String,
       status: json['status'] as String,
-      pricePerMin: json['pricePerMin'] as int,
+      pricePerMin: (json['pricePerMin'] as num?)?.toDouble() ?? 0.0,
       requestedAt: DateTime.parse(json['requestedAt'] as String),
       startedAt: json['startedAt'] != null ? DateTime.parse(json['startedAt'] as String) : null,
       endedAt: json['endedAt'] != null ? DateTime.parse(json['endedAt'] as String) : null,
       durationSeconds: json['durationSeconds'] as int? ?? 0,
-      totalCharged: json['totalCharged'] as int? ?? 0,
-      astrologerEarning: json['astrologerEarning'] as int? ?? 0,
+      totalCharged: (json['totalCharged'] as num? ?? 0).toDouble(),
+      astrologerEarning: (json['astrologerEarning'] as num? ?? 0).toDouble(),
       customerProfileUrl: json['customerProfileUrl'] as String?,
       endReason: json['endReason'] as String?,
     );
@@ -112,7 +112,7 @@ class IncomingRequest {
   final String customerId;
   final String customerName;
   final String type; // chat | voice | video
-  final int pricePerMin;
+  final double pricePerMin;
   final String? customerProfileUrl;
 
   factory IncomingRequest.fromJson(Map<String, dynamic> json) {
@@ -121,7 +121,7 @@ class IncomingRequest {
       customerId: json['customerId'] as String,
       customerName: json['customerName'] as String? ?? 'Customer',
       type: json['type'] as String? ?? 'chat',
-      pricePerMin: json['pricePerMin'] as int? ?? 0,
+      pricePerMin: (json['pricePerMin'] as num?)?.toDouble() ?? 0.0,
       customerProfileUrl: json['customerProfileUrl'] as String?,
     );
   }
@@ -136,13 +136,13 @@ class BillingTick {
 
   final String consultationId;
   final int remainingSeconds;
-  final int balance;
+  final double balance;
 
   factory BillingTick.fromJson(Map<String, dynamic> json) {
     return BillingTick(
       consultationId: json['consultationId'] as String,
       remainingSeconds: json['remainingSeconds'] as int,
-      balance: json['balance'] as int,
+      balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }

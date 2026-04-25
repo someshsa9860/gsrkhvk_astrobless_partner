@@ -188,12 +188,12 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
             _InfoRow(
               icon: Icons.account_balance_wallet_outlined,
               label: 'Your earning',
-              value: formatPaiseExact((r.priceAtOrderPaise * 0.7).round()),
+              value: formatCurrencyExact(r.priceAtOrder * 0.7),
             ),
             _InfoRow(
               icon: Icons.receipt_outlined,
               label: 'Customer paid',
-              value: formatPaiseExact(r.priceAtOrderPaise),
+              value: formatCurrencyExact(r.priceAtOrder),
             ),
           ],
         ).animate().fadeIn(delay: 140.ms),

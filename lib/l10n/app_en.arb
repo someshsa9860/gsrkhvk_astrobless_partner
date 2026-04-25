@@ -505,5 +505,63 @@
   "@continueButton": {},
 
   "getStarted": "Get Started 🚀",
-  "@getStarted": {}
+  "@getStarted": {},
+
+  "resetPasswordTitle": "Reset your password",
+  "@resetPasswordTitle": {},
+
+  "resetPasswordSubtitle": "Enter the email address linked to your account. We'll send a reset code.",
+  "@resetPasswordSubtitle": {},
+
+  "sendResetCode": "Send Reset Code",
+  "@sendResetCode": {},
+
+  "checkYourInbox": "Check your inbox",
+  "@checkYourInbox": {},
+
+  "resetCodeSentTo": "We sent a password reset code to\n{email}",
+  "@resetCodeSentTo": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+
+  "backToSignIn": "Back to sign in",
+  "@backToSignIn": {},
+
+  "unmute": "Unmute",
+  "@unmute": {},
+
+  "mute": "Mute",
+  "@mute": {},
+
+  "speaker": "Speaker",
+  "@speaker": {},
+
+  "callConnected": "Connected",
+  "@callConnected": {},
+
+  "callConnecting": "Connecting...",
+  "@callConnecting": {},
+
+  "endCall": "End Call",
+  "@endCall": {},
+
+  "chatBillingBar": "Billing per minute",
+  "@chatBillingBar": {},
+
+  "incomingChatRequest": "Incoming Chat Request",
+  "@incomingChatRequest": {},
+
+  "incomingCallRequest": "Incoming Call Request",
+  "@incomingCallRequest": {},
+
+  "secondsLeft": "seconds left",
+  "@secondsLeft": {},
+
+  "decline": "Decline",
+  "@decline": {},
+
+  "accept": "Accept",
+  "@accept": {}
 }

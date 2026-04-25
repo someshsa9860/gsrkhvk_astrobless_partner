@@ -103,9 +103,9 @@ class _EarningsTabContent extends ConsumerWidget {
       ),
       data: (summary) {
         final (gross, net, consultations) = switch (period) {
-          'week' => (summary.weekPaise, summary.weekPaise, 0),
-          'month' => (summary.monthPaise, summary.monthPaise, 0),
-          _ => (summary.allTimePaise, summary.allTimePaise, 0),
+          'week' => (summary.week, summary.week, 0),
+          'month' => (summary.month, summary.month, 0),
+          _ => (summary.allTime, summary.allTime, 0),
         };
 
         return ListView(
@@ -116,7 +116,7 @@ class _EarningsTabContent extends ConsumerWidget {
                 Expanded(
                   child: _SummaryCard(
                     label: l10n.yourEarnings,
-                    value: formatPaiseExact(net),
+                    value: formatCurrencyExact(net),
                     icon: Icons.account_balance_wallet,
                     color: AppColors.accent,
                   ).animate().fadeIn(delay: 50.ms).slideY(begin: 0.1),
@@ -138,7 +138,7 @@ class _EarningsTabContent extends ConsumerWidget {
                 Expanded(
                   child: _SummaryCard(
                     label: l10n.grossRevenue,
-                    value: formatPaiseExact(gross),
+                    value: formatCurrencyExact(gross),
                     icon: Icons.trending_up,
                     color: AppColors.success,
                   ).animate().fadeIn(delay: 150.ms).slideY(begin: 0.1),
@@ -147,7 +147,7 @@ class _EarningsTabContent extends ConsumerWidget {
                 Expanded(
                   child: _SummaryCard(
                     label: l10n.platformFee,
-                    value: formatPaiseExact((gross * 0.3).round()),
+                    value: formatCurrencyExact(gross * 0.3),
                     icon: Icons.business_center_outlined,
                     color: AppColors.textSecondary,
                   ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
@@ -298,7 +298,7 @@ class _PayoutSection extends ConsumerWidget {
                       style: tt.bodySmall?.copyWith(color: AppColors.textSecondary),
                     ),
                     Text(
-                      '${formatPaiseExact(last.amount)} on ${formatDate(last.processedAt ?? last.periodEnd)}',
+                      '${formatCurrencyExact(last.amount)} on ${formatDate(last.processedAt ?? last.periodEnd)}',
                       style: tt.titleSmall?.copyWith(
                         color: AppColors.success,
                         fontWeight: FontWeight.w600,
@@ -375,7 +375,7 @@ class _TransactionRow extends StatelessWidget {
             ),
           ),
           Text(
-            '+${formatPaise(tx.net)}',
+            '+${formatCurrency(tx.net)}',
             style: tt.titleSmall?.copyWith(
               color: AppColors.accent,
               fontWeight: FontWeight.w700,

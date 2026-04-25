@@ -58,7 +58,7 @@ Read these before every coding session:
 1. **Follow root `CLAUDE.md` exactly.** When in doubt, quote the section and ask.
 2. **`camelCase` everywhere in Dart code.** `snake_case` for file names (Dart convention). See root CLAUDE.md §3.
 3. **No token in insecure storage.** Access token and refresh token live in `flutter_secure_storage` only. Never `SharedPreferences`, never `Hive`, never in-memory between restarts.
-4. **Money is `int` (paise) everywhere.** Never `double` for money. Convert to `₹` only at the display layer using `formatPaise()`.
+4. **Money is `int` everywhere.** Stored as the smallest currency unit (1/100 of ₹1). Never `double` for money. Convert to `₹` only at the display layer using `formatAmount()`.
 5. **JWT audience is `astrobless.astrologer`.** Never send requests to `/v1/customer/*` or `/v1/admin/*` routes.
 6. **All API calls go through the `ApiClient` singleton** (Dio instance). Never use `http` package or raw `HttpClient`.
 7. **Riverpod only for state.** No `setState` in non-trivial widgets. No `Provider` (legacy). No `GetX`.
@@ -67,6 +67,123 @@ Read these before every coding session:
 10. **Every catch block that swallows errors** calls the telemetry error reporter, not just `debugPrint`.
 11. **No hardcoded strings** for API base URL, Agora App ID, or FCM config — use environment config (`lib/core/config/appConfig.dart`).
 12. **Ask when ambiguous.** Two reasonable interpretations → stop and ask.
+13. **No `GetX` for state management or navigation.** `GetX` is allowed ONLY for its context-free overlay API (`Get.showSnackbar(GetSnackBar(...))`) in auth screens where context may be stale. All state goes through Riverpod; all navigation goes through `go_router` with `AppRoutes` constants.
+14. **No hardcoded route strings.** Every navigation path must use a constant from `lib/core/router/app_routes.dart`. Never write `context.go('/some/path')` inline — always `context.go(AppRoutes.somePath)`.
+
+---
+
+## 3a. Strict no-hardcode policy
+
+These rules apply to **every file in this project**. A PR review fails if any of these are violated.
+
+### 3a.1 No hardcoded text
+
+**Every user-visible string** must come from the ARB localization file. No exceptions for "short" labels.
+
+```dart
+// ✗ Wrong
+Text('Send Reset Code'),
+Text('Enter your email address'),
+
+// ✓ Right
+Text(AppLocalizations.of(context).sendResetCode),
+Text(l10n.enterEmailAddress),
+```
+
+**Adding a new string:**
+1. Add the key to `lib/l10n/app_en.arb` (and `app_hi.arb` etc. for other locales)
+2. Run `dart run build_runner build --delete-conflicting-outputs`
+3. Use the generated `AppLocalizations.of(context).yourKey` in widgets
+
+**Exception:** Internal debug strings (in `debugPrint` / `logger.d`) do not need localization.
+
+### 3a.2 No hardcoded text styles
+
+**Every `TextStyle` must reference a token** from `AppTextStyles` or from `Theme.of(context).textTheme`. Never write raw `TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF...))` inline.
+
+```dart
+// ✗ Wrong
+Text('Heading', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFFECEFF1))),
+
+// ✓ Right — use theme text styles
+Text('Heading', style: tt.headlineMedium?.copyWith(color: AppColors.textPrimary)),
+
+// ✓ Right — use an explicit token
+Text('Heading', style: AppTextStyles.headingLarge),
+```
+
+Define any new reusable style in `lib/core/theme/app_text_styles.dart`.
+
+### 3a.3 No hardcoded colors
+
+**Every color must come from `AppColors`** (`lib/core/theme/app_colors.dart`). Never use `Color(0xFFABCDEF)` or `Colors.blue` inline.
+
+```dart
+// ✗ Wrong
+Container(color: Color(0xFF0D0B1E)),
+Icon(Icons.check, color: Colors.green),
+
+// ✓ Right
+Container(color: AppColors.bgDark),
+Icon(Icons.check, color: AppColors.success),
+```
+
+Theme-controlled colors (primary, secondary, surface, etc.) must use the backend-fetched theme color — see §3b below.
+
+### 3a.4 No hardcoded API routes
+
+**Every endpoint path must be a constant** in `lib/core/network/endpoints.dart`. Never write a path string inline in `ApiClient` or any other file.
+
+```dart
+// ✗ Wrong
+await _client.post('/auth/email/forgot-password', data: body);
+
+// ✓ Right
+await _client.post(Endpoints.auth.forgotPassword, data: body);
+```
+
+Endpoints class lives in `lib/core/network/endpoints.dart`. Adding an endpoint = adding a constant there first, then using it.
+
+### 3a.5 No hardcoded navigation paths
+
+**Every route path must be a constant** in `lib/core/router/app_routes.dart`. See rule 14 above.
+
+---
+
+## 3b. Backend-controlled theme system
+
+The admin panel controls the app's primary, secondary, and accent colors. Both apps must fetch and apply the active theme from the backend on every launch.
+
+### How it works
+
+**Backend:** The admin panel has a theme settings screen (under Settings → App Theme) that lets admins configure `primaryColor`, `secondaryColor`, `accentColor`, `bgDark`, `bgLight`, and other tokens. These are stored in the `appSettings` table under the `theme.*` namespace. The API endpoint is:
+
+```
+GET /v1/public/app-theme?audience=astrologer   → { primaryColor, secondaryColor, accentColor, bgDark, bgLight, ... }
+```
+
+The endpoint returns hex color strings. Values default to the hardcoded palette if not overridden.
+
+**App:** On startup (in `main.dart`, before `runApp`), or via a provider watched at the root widget, the app calls this endpoint and stores the result. The `AppTheme.dark()` and `AppTheme.light()` functions accept a `ThemeColors` object and build the `ThemeData`. The `appThemeColorsProvider` (in `lib/core/theme/app_theme_provider.dart`) fetches, caches, and watches the theme colors.
+
+### Implementation pattern (partner_app)
+
+`appThemeColorsProvider` is already wired in `app.dart`. It:
+1. Calls `GET /v1/public/app-theme?audience=astrologer`
+2. Parses the response into `ThemeColors` (a simple data class with hex string fields)
+3. Converts hex strings to `Color` objects
+4. Returns `ThemeColors` which is passed to `AppTheme.dark(colors)` / `AppTheme.light(colors)`
+
+**When adding new theme tokens:**
+1. Add the field to the `ThemeColors` class
+2. Add the corresponding `appSettings` key in the backend (`theme.newToken`)
+3. Add it to the `/v1/public/app-theme` endpoint response
+4. Apply it in `AppTheme` builders
+5. Use `AppColors.primaryFromTheme` (or equivalent) in widgets — never hardcode the hex
+
+**Fallback:** If the API call fails (no network, backend down), use the default `ThemeColors` hardcoded in `AppColors`. The app must never crash due to a failed theme fetch.
+
+**Cache:** Store the last-fetched theme in Hive (`themeColorsBox`) and reuse it as a fallback while the fresh fetch loads. This prevents a flash of wrong colors on startup.
 
 ---
 
@@ -199,44 +316,13 @@ Password rules (enforce client-side before submit):
 - Show strength indicator (weak / medium / strong)
 ```
 
-### 4.3 Email + password flow
+### 4.5 Token storage
 
-```
-Signup:
-1. POST /v1/astrologer/auth/email/signup { email, password, displayName }
-   → Backend sends email OTP (6-digit, 10-min TTL)
-   → Navigate to email OTP verification screen
+Tokens are stored in `flutter_secure_storage` under the keys `astrologer_access_token` and `astrologer_refresh_token`. Both use `IOSOptions(accessibility: KeychainAccessibility.first_unlock)` so they survive app restarts but are wiped on device wipe. See `lib/core/auth/token_storage.dart`.
 
-2. POST /v1/astrologer/auth/email/verify-otp { email, otp }
-   → Backend returns { accessToken, refreshToken, astrologer }
-   → Navigate to onboarding
+### 4.6 Token refresh (silent)
 
-Login:
-1. POST /v1/astrologer/auth/email/login { email, password }
-   → Returns { accessToken, refreshToken, astrologer }
-   → If emailVerified=false → show re-verify screen
-
-Password reset:
-1. POST /v1/astrologer/auth/email/forgot-password { email }
-   → Backend sends reset link via email
-2. Deep-link opens reset screen
-   → POST /v1/astrologer/auth/email/reset-password { token, newPassword }
-```
-
-### 4.4 Token storage
-
-```dart
-// lib/core/auth/tokenStorage.dart
-// Uses flutter_secure_storage
-static const _accessKey  = 'astrologer_access_token';
-static const _refreshKey = 'astrologer_refresh_token';
-```
-
-Both tokens stored with `IOSOptions(accessibility: KeychainAccessibility.first_unlock)` so they survive app restarts but are wiped on device wipe.
-
-### 4.5 Token refresh (silent)
-
-Dio interceptor in `lib/core/network/authInterceptor.dart`:
+The Dio auth interceptor at `lib/core/network/auth_interceptor.dart` handles silent refresh:
 
 ```
 On 401 response:
@@ -246,20 +332,19 @@ On 401 response:
 3b. Failure (401/403) → clear tokens, pop to /auth/phone (sign-out)
 ```
 
-### 4.6 JWT audience
+### 4.7 JWT audience
 
 Every request includes `Authorization: Bearer <accessToken>`. The backend middleware validates `jwt.aud === 'astrobless.astrologer'` and rejects anything else. This is enforced server-side; the app just sends the token.
 
-### 4.7 Sign-out
+### 4.8 Sign-out
 
-```dart
-// 1. DELETE /v1/astrologer/auth/logout { refreshToken } (best-effort, fire-and-forget)
-// 2. Clear flutter_secure_storage tokens
-// 3. Clear Hive caches
-// 4. Disconnect Socket.IO
-// 5. Unsubscribe FCM topic
-// 6. Navigate to /auth/phone (replace stack)
-```
+Sign-out sequence (in order):
+1. `DELETE /v1/astrologer/auth/logout { refreshToken }` — best-effort, fire-and-forget
+2. Clear `flutter_secure_storage` tokens
+3. Clear Hive caches
+4. Disconnect Socket.IO
+5. Unsubscribe FCM topic
+6. Navigate to `/auth/phone` (replace stack)
 
 ---
 
@@ -283,13 +368,14 @@ Every request includes `Authorization: Bearer <accessToken>`. The backend middle
 - [ ] Consultation history (chat, voice, kundli)
 - [ ] FCM push notifications: incoming call, incoming chat, incoming kundli request, earnings updates, KYC status
 - [ ] Reviews & ratings view
-- [ ] Support contact (mailto or in-app)
+- [ ] **In-app support tickets** — astrologer submits support tickets, views replies (`SupportTicket` + `SupportTicketMessage`)
+- [ ] FCM push: `supportTicketReply` notification type
 
 ### v1.1
 
 - [ ] Video call consultations (Agora)
 - [ ] Live streaming (Agora Live)
-- [ ] Puja service listings (astrologer offers pujas, admin approves)
+- [ ] **Puja service management** — view assigned puja slots, update slot status (inProgress → completed), attach recording URL (`PujaSlot`, `PujaBooking`)
 - [ ] Bank account / UPI linkage for payouts
 - [ ] Advanced analytics (hourly demand, peak hours chart)
 - [ ] TOTP 2FA enrollment (optional for astrologers)
@@ -327,7 +413,7 @@ partner_app/
 │   │   │   ├── app_theme.dart           # MaterialTheme light + dark
 │   │   │   └── app_colors.dart          # Color constants
 │   │   ├── utils/
-│   │   │   ├── format_paise.dart        # formatPaise(int paise) → '₹500.00'
+│   │   │   ├── format_amount.dart       # formatAmount(int amount) → '₹500.00'
 │   │   │   ├── format_date.dart         # intl-based date helpers
 │   │   │   └── validators.dart          # Phone / email / password validators
 │   │   ├── error/
@@ -426,74 +512,37 @@ partner_app/
 
 ## 7. Routing (go_router)
 
-```dart
-// lib/core/router/app_router.dart
+The router is configured in `lib/core/router/app_router.dart`. It uses a `redirect` guard that checks the current `AuthState` — unauthenticated users are redirected to `/auth/phone`, authenticated users are redirected away from auth routes.
 
-final appRouter = GoRouter(
-  initialLocation: '/auth/phone',
-  redirect: (context, state) {
-    final isAuth = ref.read(authStateProvider) == AuthState.authenticated;
-    final isAuthRoute = state.matchedLocation.startsWith('/auth');
+Route map:
 
-    if (!isAuth && !isAuthRoute) return '/auth/phone';
-    if (isAuth && isAuthRoute) return '/home';
-    return null;
-  },
-  routes: [
-    GoRoute(path: '/auth/phone',          builder: (_, __) => const PhoneAuthScreen()),
-    GoRoute(path: '/auth/otp',            builder: (_, s) => OtpScreen(phone: s.extra as String)),
-    GoRoute(path: '/auth/email',          builder: (_, __) => const EmailAuthScreen()),
-    GoRoute(path: '/auth/email/verify',   builder: (_, s) => EmailOtpScreen(email: s.extra as String)),
-    GoRoute(path: '/auth/forgot-password',builder: (_, __) => const ForgotPasswordScreen()),
-    GoRoute(path: '/onboarding',          builder: (_, __) => const OnboardingScreen()),
-    ShellRoute(
-      builder: (_, __, child) => HomeScreen(child: child),
-      routes: [
-        GoRoute(path: '/home',            builder: (_, __) => const DashboardScreen()),
-        GoRoute(path: '/consultations',   builder: (_, __) => const ConsultationHistoryScreen()),
-        GoRoute(path: '/earnings',        builder: (_, __) => const EarningsScreen()),
-        GoRoute(path: '/profile',         builder: (_, __) => const ProfileScreen()),
-      ],
-    ),
-    GoRoute(path: '/consultation/chat/:id', builder: (_, s) => ChatConsultationScreen(id: s.pathParameters['id']!)),
-    GoRoute(path: '/consultation/call/:id', builder: (_, s) => CallScreen(id: s.pathParameters['id']!)),
-    GoRoute(path: '/consultation/:id',      builder: (_, s) => ConsultationDetailScreen(id: s.pathParameters['id']!)),
-    GoRoute(path: '/notifications',       builder: (_, __) => const NotificationsScreen()),
-    GoRoute(path: '/settings',            builder: (_, __) => const SettingsScreen()),
-    GoRoute(path: '/profile/edit',        builder: (_, __) => const EditProfileScreen()),
-    GoRoute(path: '/onboarding/kyc',      builder: (_, __) => const KycScreen()),
-  ],
-);
+```
+/auth/phone               → PhoneAuthScreen
+/auth/otp                 → OtpScreen (receives phone as extra)
+/auth/email               → EmailAuthScreen
+/auth/email/verify        → EmailOtpScreen (receives email as extra)
+/auth/forgot-password     → ForgotPasswordScreen
+/onboarding               → OnboardingScreen
+/home                     → DashboardScreen         (shell tab)
+/consultations            → ConsultationHistoryScreen (shell tab)
+/earnings                 → EarningsScreen          (shell tab)
+/profile                  → ProfileScreen            (shell tab)
+/consultation/chat/:id    → ChatConsultationScreen
+/consultation/call/:id    → CallScreen
+/consultation/:id         → ConsultationDetailScreen
+/notifications            → NotificationsScreen
+/settings                 → SettingsScreen
+/profile/edit             → EditProfileScreen
+/onboarding/kyc           → KycScreen
 ```
 
 ---
 
 ## 8. Network layer
 
-### 8.1 Dio client setup
+### 8.1 Dio client
 
-```dart
-// lib/core/network/api_client.dart
-
-Dio createDio(Ref ref) {
-  final dio = Dio(BaseOptions(
-    baseUrl: AppConfig.apiBaseUrl,  // 'http://localhost:3000/v1/astrologer'
-    connectTimeout: const Duration(seconds: 15),
-    receiveTimeout: const Duration(seconds: 30),
-    headers: {
-      'Content-Type': 'application/json',
-      'X-App-Version': AppConfig.version,
-      'X-Platform': Platform.isIOS ? 'ios' : 'android',
-    },
-  ));
-  dio.interceptors.addAll([
-    AuthInterceptor(ref),       // Inject Bearer token + silent refresh
-    ErrorInterceptor(),         // Map DioException → AppException
-    LogInterceptor(requestBody: kDebugMode, responseBody: kDebugMode),
-  ]);
-  return dio;
-}
-```
+The Dio singleton is created in `lib/core/network/api_client.dart` with `baseUrl` set to `AppConfig.apiBaseUrl`, connect timeout 15 s, receive timeout 30 s, and default headers for `Content-Type`, `X-App-Version`, and `X-Platform`. Three interceptors are added in order: `AuthInterceptor` (injects Bearer token and handles silent refresh), `ErrorInterceptor` (maps `DioException` → `AppException`), and `LogInterceptor` (logs request/response bodies in debug mode only).
 
 ### 8.2 Response envelope
 
@@ -507,58 +556,11 @@ The `ErrorInterceptor` unwraps this: successful responses pass through `data`; e
 
 ### 8.3 AppException hierarchy
 
-```dart
-// lib/core/error/app_exception.dart
-sealed class AppException implements Exception {
-  final String code;
-  final String message;
-}
-
-class UnauthorizedException extends AppException { ... }   // 401
-class ForbiddenException extends AppException { ... }      // 403
-class NotFoundException extends AppException { ... }       // 404
-class ValidationException extends AppException { ... }     // 400
-class RateLimitException extends AppException { ... }      // 429
-class ServerException extends AppException { ... }         // 5xx
-class NetworkException extends AppException { ... }        // no connectivity
-```
+`AppException` is a sealed class in `lib/core/error/app_exception.dart`. Subclasses map to HTTP status codes: `UnauthorizedException` (401), `ForbiddenException` (403), `NotFoundException` (404), `ValidationException` (400), `RateLimitException` (429), `ServerException` (5xx), `NetworkException` (no connectivity). All carry `code` and `message` fields from the backend error envelope.
 
 ### 8.4 Retrofit API interfaces
 
-```dart
-// lib/features/auth/data/auth_api.dart
-@RestApi()
-abstract class AuthApi {
-  factory AuthApi(Dio dio) = _AuthApi;
-
-  @POST('/phone/send-otp')
-  Future<SendOtpResponse> sendPhoneOtp(@Body() SendOtpRequest body);
-
-  @POST('/phone/verify-otp')
-  Future<LoginResult> verifyPhoneOtp(@Body() VerifyOtpRequest body);
-
-  @POST('/email/signup')
-  Future<void> emailSignup(@Body() EmailSignupRequest body);
-
-  @POST('/email/verify-otp')
-  Future<LoginResult> verifyEmailOtp(@Body() VerifyEmailOtpRequest body);
-
-  @POST('/email/login')
-  Future<LoginResult> emailLogin(@Body() EmailLoginRequest body);
-
-  @POST('/email/forgot-password')
-  Future<void> forgotPassword(@Body() ForgotPasswordRequest body);
-
-  @POST('/email/reset-password')
-  Future<void> resetPassword(@Body() ResetPasswordRequest body);
-
-  @POST('/refresh')
-  Future<LoginResult> refresh(@Body() RefreshRequest body);
-
-  @DELETE('/logout')
-  Future<void> logout(@Body() LogoutRequest body);
-}
-```
+Each feature's API interface lives in `features/<name>/data/<name>_api.dart` and is annotated with `@RestApi()`. Methods use `@POST`, `@GET`, `@PATCH`, `@DELETE` annotations with relative paths and `@Body()` parameters. Retrofit generates the implementation class via `build_runner`. The auth API covers `sendPhoneOtp`, `verifyPhoneOtp`, `emailSignup`, `verifyEmailOtp`, `emailLogin`, `forgotPassword`, `resetPassword`, `refresh`, and `logout`.
 
 ---
 
@@ -575,46 +577,11 @@ abstract class AuthApi {
 
 ### 9.2 Auth state
 
-```dart
-// lib/core/auth/auth_state.dart
+`AuthNotifier` in `lib/core/auth/auth_state.dart` is a `@riverpod` class extending `_$AuthNotifier`. It holds an `AuthState` enum (`unknown`, `unauthenticated`, `authenticated`). On `init()`, it checks secure storage for existing tokens. `setTokens()` stores new tokens and transitions to `authenticated`. `signOut()` clears storage and transitions to `unauthenticated`.
 
-enum AuthState { unknown, unauthenticated, authenticated }
+### 9.3 Feature controller pattern
 
-@riverpod
-class AuthNotifier extends _$AuthNotifier {
-  @override
-  AuthState build() => AuthState.unknown;
-
-  Future<void> init() async { /* check secure storage for tokens */ }
-  Future<void> setTokens(String access, String refresh) async { ... }
-  Future<void> signOut() async { ... }
-}
-```
-
-### 9.3 Example feature controller
-
-```dart
-// lib/features/dashboard/presentation/dashboard_controller.dart
-
-@riverpod
-class DashboardController extends _$DashboardController {
-  @override
-  FutureOr<DashboardData> build() => _load();
-
-  Future<DashboardData> _load() async {
-    final repo = ref.read(dashboardRepositoryProvider);
-    return repo.getDashboardOverview();
-  }
-
-  Future<void> setOnline(bool online) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      await ref.read(presenceRepositoryProvider).setPresence(online);
-      return _load();
-    });
-  }
-}
-```
+Each feature controller is a `@riverpod` class extending `AsyncNotifier`. The `build()` method calls a private `_load()` that reads from the repository. Mutations use `AsyncValue.guard()` to update state, calling repository methods via `ref.read(repositoryProvider)`. See `lib/features/dashboard/presentation/dashboard_controller.dart` for a reference implementation.
 
 ---
 
@@ -622,31 +589,7 @@ class DashboardController extends _$DashboardController {
 
 ### 10.1 Connection
 
-```dart
-// lib/core/realtime/socket_service.dart
-
-class SocketService {
-  late final IO.Socket _socket;
-
-  void connect(String accessToken) {
-    _socket = IO.io(AppConfig.wsBaseUrl, IO.OptionBuilder()
-      .setTransports(['websocket'])
-      .setNamespace('/consultation')
-      .setAuth({'token': accessToken})
-      .enableAutoConnect()
-      .setReconnectionAttempts(10)
-      .build());
-
-    _socket.onConnect((_) => debugPrint('Socket connected'));
-    _socket.onDisconnect((_) => debugPrint('Socket disconnected'));
-    _socket.onConnectError((e) => ErrorReporter.report(e));
-  }
-
-  void disconnect() => _socket.disconnect();
-  void emit(String event, dynamic data) => _socket.emit(event, data);
-  void on(String event, Function(dynamic) handler) => _socket.on(event, handler);
-}
-```
+`SocketService` in `lib/core/realtime/socket_service.dart` manages the Socket.IO connection. `connect(accessToken)` creates the socket connecting to `AppConfig.wsBaseUrl` on the `/consultation` namespace with `{ token: accessToken }` in the auth payload, `websocket` transport, auto-connect enabled, and up to 10 reconnection attempts. `disconnect()`, `emit()`, and `on()` are thin wrappers. Connection errors are forwarded to `ErrorReporter`. Call `connect()` immediately after a successful login and `disconnect()` on sign-out.
 
 ### 10.2 Events the astrologer app handles
 
@@ -654,12 +597,12 @@ class SocketService {
 
 | Event | Payload | Action |
 |---|---|---|
-| `consultation:requested` | `{ consultationId, customerId, type, customerName, pricePerMinPaise }` | Show `IncomingRequestSheet` (30s countdown) |
+| `consultation:requested` | `{ consultationId, customerId, type, customerName, pricePerMinAmount }` | Show `IncomingRequestSheet` (30s countdown) |
 | `message:new` | `{ message }` | Append to chat list |
 | `message:ack` | `{ clientMsgId, serverId, createdAt }` | Update local message status |
 | `message:read` | `{ consultationId, upToMessageId }` | Show double-tick |
 | `typing:update` | `{ consultationId, senderType, isTyping }` | Show/hide typing indicator |
-| `billing:tick` | `{ consultationId, remainingSeconds, balancePaise }` | Update billing ticker UI |
+| `billing:tick` | `{ consultationId, remainingSeconds, balanceAmount }` | Update billing ticker UI |
 | `billing:lowBalance` | `{ consultationId, secondsLeft }` | Show warning banner |
 | `consultation:ended` | `{ consultationId, reason, summary }` | Navigate to post-call summary |
 | `presence:ack` | `{ isOnline }` | Confirm online toggle |
@@ -686,25 +629,11 @@ All events carry a `traceId` field for debugging.
 
 ### 11.1 Setup
 
-```dart
-// lib/main.dart — before runApp
-await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-```
+Firebase is initialised in `lib/main.dart` before `runApp` via `Firebase.initializeApp`. The background message handler (`_firebaseMessagingBackgroundHandler`) is registered as a top-level function before `runApp`.
 
 ### 11.2 Token registration
 
-On every login, register the FCM token:
-
-```dart
-final token = await FirebaseMessaging.instance.getToken();
-await notificationsApi.registerFcmToken(FcmTokenRequest(
-  token: token!,
-  platform: Platform.isIOS ? 'ios' : 'android',
-));
-```
-
-Listen for token refresh: `FirebaseMessaging.instance.onTokenRefresh`.
+On every login, fetch the FCM token via `FirebaseMessaging.instance.getToken()` and register it with `POST /notifications/fcm-token { token, platform }`. Also listen to `FirebaseMessaging.instance.onTokenRefresh` to re-register when the token rotates.
 
 ### 11.3 Notification types and actions
 
@@ -715,22 +644,17 @@ Listen for token refresh: `FirebaseMessaging.instance.onTokenRefresh`.
 | `earningsUpdate` | Show toast / update earnings badge |
 | `kycStatusUpdate` | Navigate to KYC status screen |
 | `payoutProcessed` | Show earnings screen with toast |
+| `kundliRequest` | Show `KundliRequestDetailScreen` for new kundli request |
+| `supportTicketReply` | Navigate to support ticket detail screen |
 | `platformAnnouncement` | Navigate to notifications list |
 
 ### 11.4 Foreground handling
 
-```dart
-FirebaseMessaging.onMessage.listen((message) {
-  // App is in foreground: show flutter_local_notifications banner
-  // Also dispatch to the relevant Riverpod provider to update in-memory state
-});
-```
+`FirebaseMessaging.onMessage` listener fires when the app is in the foreground. Show a `flutter_local_notifications` banner and dispatch to the relevant Riverpod provider to update in-memory state.
 
 ### 11.5 Background / terminated handling
 
-`firebaseMessagingBackgroundHandler` is a top-level function that stores the notification in Hive for display when the app opens.
-
-On app launch, check `FirebaseMessaging.instance.getInitialMessage()` for a tap-to-open notification.
+`firebaseMessagingBackgroundHandler` (top-level function) stores the notification in Hive for display when the app opens. On app launch, check `FirebaseMessaging.instance.getInitialMessage()` for a tap-to-open notification.
 
 ---
 
@@ -767,29 +691,11 @@ On app launch, check `FirebaseMessaging.instance.getInitialMessage()` for a tap-
 
 ### 12.3 Permissions
 
-Request microphone (voice) and camera (video) permissions before joining any call using `permission_handler`.
-
-```dart
-// Request before call join
-final statuses = await [Permission.microphone, Permission.camera].request();
-if (statuses[Permission.microphone] != PermissionStatus.granted) {
-  // Show dialog: microphone required
-  return;
-}
-```
+Request microphone (voice) and camera (video) permissions before joining any call using `permission_handler`. If microphone permission is denied, show a dialog explaining it is required and abort the call join.
 
 ### 12.4 Agora engine lifecycle
 
-```dart
-// lib/features/consultations/presentation/call_screen.dart
-// — init in initState, dispose in dispose
-await AgoraRtcEngine.create(AppConfig.agoraAppId);
-await engine.enableVideo(); // or just audio for voice
-await engine.joinChannel(token: agoraToken, channelId: channelName, uid: 0, options: ...);
-// on leave:
-await engine.leaveChannel();
-await engine.release();
-```
+The Agora engine is managed in `lib/features/consultations/presentation/call_screen.dart`. On `initState`: create the engine with `AppConfig.agoraAppId`, enable video (or audio-only for voice calls), then join the channel with the provided `agoraToken` and `channelName`. On `dispose`: leave the channel and release the engine. If `call:tokenRefresh` is received mid-call, call `engine.renewToken(newToken)` immediately.
 
 ---
 
@@ -857,32 +763,9 @@ Customer app                  Backend                    Partner app
 - Preview before submit
 - Submit → backend stores, notifies customer
 
-### 13.3 DB tables involved (backend reference)
+### 13.3 DB table reference
 
-```sql
-create table "kundliRequests" (
-  "id"               uuid primary key default gen_random_uuid(),
-  "customerId"       uuid not null references "customers"("id"),
-  "astrologerId"     uuid not null references "astrologers"("id"),
-  "status"           text not null default 'pending',  -- pending|accepted|inProgress|completed|declined|expired
-  "birthDate"        date not null,
-  "birthTime"        time,
-  "birthPlace"       text not null,
-  "birthLat"         numeric(9,6),
-  "birthLng"         numeric(9,6),
-  "question"         text,
-  "priceAtOrderPaise" bigint not null,
-  "commissionPct"    numeric(5,2) not null,
-  "slaDueAt"         timestamptz,       -- set when accepted
-  "reportText"       text,
-  "reportPdfUrl"     text,
-  "declineReason"    text,
-  "astrologerNotes"  text,             -- private notes visible only to astrologer
-  "traceId"          text,
-  "createdAt"        timestamptz not null default now(),
-  "updatedAt"        timestamptz not null default now()
-);
-```
+The `kundliRequests` table (defined in root `CLAUDE.md` §12 area, managed by backend migrations) tracks each request. Key fields: `id`, `customerId`, `astrologerId`, `status` (pending → accepted → inProgress → completed → declined → expired), `birthDate`, `birthTime`, `birthPlace`, `birthLat`, `birthLng`, `question`, `priceAtOrder` (stored as smallest currency unit — 1/100 of ₹1), `commissionPct`, `slaDueAt` (set on accept), `reportText`, `reportPdfUrl`, `declineReason`, `astrologerNotes` (private), `traceId`.
 
 ### 13.4 Backend endpoints (astrologer side)
 
@@ -892,27 +775,27 @@ GET  /v1/astrologer/kundli-requests/:id
 POST /v1/astrologer/kundli-requests/:id/accept  { slaDurationHours: 6|12|24 }
 POST /v1/astrologer/kundli-requests/:id/decline { reason }
 POST /v1/astrologer/kundli-requests/:id/submit  { reportText, reportPdfS3Key? }
-GET  /v1/astrologer/kundli-requests/:id/chart   → { planets, houses, aspects } (computed from birth data)
+GET  /v1/astrologer/kundli-requests/:id/chart   → { planets, houses, aspects }
 ```
 
 ### 13.5 Socket.IO event for kundli
 
 | Event | Direction | Payload |
 |---|---|---|
-| `kundli:request` | server → astrologer | `{ requestId, customerId, customerName, birthDate, birthTime, birthPlace, priceAtOrderPaise }` |
+| `kundli:request` | server → astrologer | `{ requestId, customerId, customerName, birthDate, birthTime, birthPlace, priceAtOrder }` |
 | `kundli:accepted` | server → customer | `{ requestId, slaDueAt }` |
 | `kundli:completed` | server → customer | `{ requestId, reportPreview }` |
 
 ---
 
-## 15. KYC & onboarding
+## 14. KYC & onboarding
 
-### 13.1 Steps (ordered)
+### 14.1 Steps (ordered)
 
 1. **Basic profile** — displayName, bio, gender, DOB
 2. **Specialties** — multi-select from predefined list (Vedic, Tarot, Numerology, Vastu, etc.)
 3. **Languages** — multi-select
-4. **Pricing** — pricePerMinChatPaise, pricePerMinCallPaise (int, min configurable via backend settings)
+4. **Pricing** — `pricePerMinChat`, `pricePerMinCall` (int, stored as smallest currency unit; min configurable via backend settings)
 5. **KYC documents** — upload Aadhaar front/back + PAN (or passport for non-Indian) via S3 pre-signed URL
 6. **Bank account / UPI** — for payouts; stored server-side encrypted
 
@@ -921,96 +804,55 @@ All steps are:
 - Resumable (go_router guards skip completed steps on re-open)
 - Tracked server-side via `astrologers.kycStatus`: `pending → submitted → approved | rejected`
 
-### 13.2 KYC document upload
+### 14.2 KYC document upload
 
-```dart
-// 1. Pick image from gallery / camera
-final file = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-// 2. Get pre-signed S3 URL from backend
-final presigned = await kycApi.getUploadUrl(KycUploadUrlRequest(
-  docType: 'aadhaarFront',
-  mimeType: 'image/jpeg',
-));
-
-// 3. Upload directly to S3 (bypass backend, no token needed)
-await Dio().put(presigned.uploadUrl, data: file.readAsBytesSync(),
-  options: Options(headers: {'Content-Type': 'image/jpeg'}));
-
-// 4. Confirm upload to backend
-await kycApi.confirmUpload(KycConfirmRequest(docType: 'aadhaarFront', s3Key: presigned.s3Key));
-```
+Upload flow (four steps):
+1. Pick image from gallery or camera via `ImagePicker`
+2. Call `GET /kyc/upload-url?docType=aadhaarFront` to receive a pre-signed S3 URL and `s3Key`
+3. `PUT` the file bytes directly to the pre-signed URL using `Dio` (no backend token needed for this request)
+4. Call `POST /kyc/confirm { docType, s3Key }` to tell the backend the upload succeeded
 
 ---
 
-## 16. Earnings & payouts
+## 15. Earnings & payouts
 
 - `GET /v1/astrologer/earnings` — list of `astrologerEarnings` rows
 - `GET /v1/astrologer/earnings/summary` — today / this week / all-time totals
 - `GET /v1/astrologer/payouts` — payout history
 - Payouts are initiated by admin (weekly batch). Astrologers view status only.
-- Money displayed: always format via `formatPaise(int paise)` → `₹500.00`
+- Money displayed: always format via `formatAmount(int amount)` → `₹500.00`
 
 ---
 
-## 17. Presence (online/offline)
+## 16. Presence (online/offline)
 
 The astrologer's availability is surfaced to customers browsing the platform.
 
-```dart
-// Toggle via PATCH /v1/astrologer/profile/presence { isOnline: true|false }
-// Also emitted via Socket.IO 'presence:set' { isOnline } for real-time propagation
-// The server broadcasts 'presence:update' to customer sockets watching this astrologer
-```
+Toggle via `PATCH /v1/astrologer/profile/presence { isOnline: true|false }`. Also emit Socket.IO `presence:set { isOnline }` for real-time propagation. The server broadcasts `presence:update` to customer sockets watching this astrologer.
 
 The online toggle is prominently on the dashboard (large switch / FAB-style toggle). When the app is killed or socket disconnects for > 60s, the backend auto-sets `isOnline=false`.
 
 ---
 
-## 18. UI design language
+## 17. UI design language
 
-### 16.1 Visual style
+### 17.1 Visual style
 
 - **Theme:** Warm, trustworthy, celestial. Dark navy + gold accents. Professional yet spiritual.
 - **Not loud:** Avoid rainbow gradients. Use depth via shadows and subtle gradients.
 - **Dark mode first:** Default to dark. Light mode supported via ThemeMode.system.
 
-### 16.2 Color palette
+### 17.2 Color palette
 
-```dart
-// lib/core/theme/app_colors.dart
-class AppColors {
-  // Primary — deep indigo
-  static const primary = Color(0xFF5C6BC0);
-  static const primaryDark = Color(0xFF3949AB);
+Colors are defined in `lib/core/theme/app_colors.dart`. Key values:
+- Primary (deep indigo): `#5C6BC0` / dark variant `#3949AB`
+- Accent (warm gold): `#FFB300` / light variant `#FFE082`
+- Dark mode backgrounds: `#0D0B1E` (bg), `#1A1740` (surface), `#231F54` (card)
+- Light mode backgrounds: `#F5F5FF` (bg), `#FFFFFF` (surface)
+- Status: success `#4CAF50`, warning `#FF9800`, error `#F44336`, info `#2196F3`
+- Text (dark mode): primary `#ECEFF1`, secondary `#B0BEC5`, disabled `#546E7A`
 
-  // Accent — warm gold
-  static const accent = Color(0xFFFFB300);
-  static const accentLight = Color(0xFFFFE082);
-
-  // Backgrounds (dark mode)
-  static const bgDark = Color(0xFF0D0B1E);
-  static const surfaceDark = Color(0xFF1A1740);
-  static const cardDark = Color(0xFF231F54);
-
-  // Backgrounds (light mode)
-  static const bgLight = Color(0xFFF5F5FF);
-  static const surfaceLight = Color(0xFFFFFFFF);
-
-  // Status
-  static const success = Color(0xFF4CAF50);
-  static const warning = Color(0xFFFF9800);
-  static const error = Color(0xFFF44336);
-  static const info = Color(0xFF2196F3);
-
-  // Text
-  static const textPrimary = Color(0xFFECEFF1);
-  static const textSecondary = Color(0xFFB0BEC5);
-  static const textDisabled = Color(0xFF546E7A);
-}
-```
-
-### 16.3 Typography
+### 17.3 Typography
 
 - **Font:** Inter (via `google_fonts` or bundled)
 - Headings: `fontWeight: FontWeight.w700`
@@ -1018,7 +860,7 @@ class AppColors {
 - Captions: size `12sp`, `textSecondary`
 - Monetary amounts: `fontWeight: FontWeight.w600`, `accent` color
 
-### 16.4 Component patterns
+### 17.4 Component patterns
 
 **Loading states:**
 - Full-screen initial loads: shimmer skeleton (same layout as loaded state)
@@ -1040,7 +882,7 @@ class AppColors {
 
 ---
 
-## 19. Backend endpoints reference (astrologer app uses)
+## 18. Backend endpoints reference (astrologer app uses)
 
 All under `AppConfig.apiBaseUrl` = `https://api.astrobless.app/v1/astrologer` (or `http://localhost:3000/v1/astrologer` locally).
 
@@ -1060,7 +902,7 @@ DELETE /auth/logout                 { refreshToken }
 GET  /profile                       → { astrologer }
 PATCH /profile                      { displayName?, bio?, languages?, specialties?, profileImageUrl? }
 PATCH /profile/presence             { isOnline }
-PATCH /profile/pricing              { pricePerMinChatPaise, pricePerMinCallPaise }
+PATCH /profile/pricing              { pricePerMinChat, pricePerMinCall }
 
 # KYC
 GET  /kyc/upload-url                ?docType=aadhaarFront → { uploadUrl, s3Key }
@@ -1077,7 +919,7 @@ GET  /consultations/:id/messages    ?afterId&limit
 
 # Earnings
 GET  /earnings                      ?from&to&page&limit
-GET  /earnings/summary              → { todayPaise, weekPaise, allTimePaise }
+GET  /earnings/summary              → { todayAmount, weekAmount, allTimeAmount }
 
 # Payouts
 GET  /payouts                       ?status&from&to&page&limit
@@ -1097,11 +939,23 @@ POST /kundli-requests/:id/decline   { reason }
 POST /kundli-requests/:id/submit    { reportText, reportPdfS3Key? }
 GET  /kundli-requests/:id/chart     → { planets, houses, aspects }
 GET  /kundli-requests/upload-url    ?docType=kundliReport → { uploadUrl, s3Key }
+
+# Support tickets
+POST /support/tickets               { category, subject, description, attachmentUrls? }
+GET  /support/tickets               ?status
+GET  /support/tickets/:id
+POST /support/tickets/:id/messages  { body }
+POST /support/tickets/:id/close
+
+# Puja slots (v1.1 — astrologer views assigned slots)
+GET  /puja/slots                    ?from&to&status
+GET  /puja/slots/:id
+PATCH /puja/slots/:id/status        { status: 'inProgress' | 'completed', recordingUrl? }
 ```
 
 ---
 
-## 20. Code conventions (Dart / Flutter)
+## 19. Code conventions (Dart / Flutter)
 
 1. **File names:** `snake_case.dart` — always.
 2. **Class names:** `PascalCase` — always.
@@ -1119,7 +973,7 @@ GET  /kundli-requests/upload-url    ?docType=kundliReport → { uploadUrl, s3Key
 
 ---
 
-## 21. Testing
+## 20. Testing
 
 | Layer | Tool | Target |
 |---|---|---|
@@ -1134,24 +988,9 @@ GET  /kundli-requests/upload-url    ?docType=kundliReport → { uploadUrl, s3Key
 
 ---
 
-## 22. Environment config
+## 21. Environment config
 
-```dart
-// lib/core/config/app_config.dart
-
-class AppConfig {
-  static const apiBaseUrl = String.fromEnvironment(
-    'API_BASE_URL', defaultValue: 'http://localhost:3000/v1/astrologer',
-  );
-  static const wsBaseUrl = String.fromEnvironment(
-    'WS_BASE_URL', defaultValue: 'ws://localhost:3000',
-  );
-  static const agoraAppId = String.fromEnvironment('AGORA_APP_ID');
-  static const sentryDsn   = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
-  static const version     = String.fromEnvironment('APP_VERSION', defaultValue: '1.0.0');
-  static const isDev       = bool.fromEnvironment('IS_DEV', defaultValue: true);
-}
-```
+`AppConfig` in `lib/core/config/app_config.dart` reads all environment values via `String.fromEnvironment` / `bool.fromEnvironment` at compile time. Values: `apiBaseUrl` (default `http://localhost:3000/v1/astrologer`), `wsBaseUrl` (default `ws://localhost:3000`), `agoraAppId`, `sentryDsn`, `version`, `isDev`.
 
 Pass via `--dart-define` in `flutter run` / CI:
 ```bash
@@ -1166,7 +1005,7 @@ Use `10.0.2.2` on Android emulator (maps to host machine), `localhost` on iOS si
 
 ---
 
-## 23. Build & run
+## 22. Build & run
 
 ```bash
 # Install deps
@@ -1195,7 +1034,7 @@ flutter build apk --release --dart-define=API_BASE_URL=https://api.astrobless.ap
 
 ---
 
-## 24. Build order (recommended for a new feature)
+## 23. Build order (recommended for a new feature)
 
 When starting a new feature, follow this order — each step is independently testable:
 
@@ -1211,7 +1050,7 @@ When starting a new feature, follow this order — each step is independently te
 
 ---
 
-## 25. When starting a new feature (for Claude Code)
+## 24. When starting a new feature (for Claude Code)
 
 Before writing any code:
 
@@ -1227,7 +1066,7 @@ When writing code:
 
 ---
 
-## 26. Open questions / pending decisions
+## 25. Open questions / pending decisions
 
 - [ ] Which astrologer onboarding steps are mandatory for MVP vs. can be skipped?
 - [ ] Incoming call UI: full-screen overlay (like native call) or in-app bottom sheet?
@@ -1239,7 +1078,7 @@ When writing code:
 
 ---
 
-## 27. Glossary
+## 26. Glossary
 
 See root `CLAUDE.md` §25 for full glossary. Partner-app-specific terms:
 
@@ -1252,4 +1091,4 @@ See root `CLAUDE.md` §25 for full glossary. Partner-app-specific terms:
 
 ---
 
-_Last updated: 2026-04-21. Keep this file alive — update it when decisions are made._
+_Last updated: 2026-04-25. Keep this file alive — update it when decisions are made._

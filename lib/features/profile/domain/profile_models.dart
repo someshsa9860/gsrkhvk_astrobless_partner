@@ -25,8 +25,8 @@ class AstrologerProfile {
   final double ratingAvg;
   final int ratingCount;
   final int totalConsultations;
-  final int pricePerMinChat;
-  final int pricePerMinCall;
+  final double pricePerMinChat;
+  final double pricePerMinCall;
   final String? bio;
   final String? profileImageUrl;
   final List<String> languages;
@@ -44,8 +44,8 @@ class AstrologerProfile {
       ratingAvg: (json['ratingAvg'] as num?)?.toDouble() ?? 0.0,
       ratingCount: json['ratingCount'] as int? ?? 0,
       totalConsultations: json['totalConsultations'] as int? ?? 0,
-      pricePerMinChat: json['pricePerMinChat'] as int? ?? 3000,
-      pricePerMinCall: json['pricePerMinCall'] as int? ?? 4000,
+      pricePerMinChat: (json['pricePerMinChat'] as num?)?.toDouble() ?? 30.0,
+      pricePerMinCall: (json['pricePerMinCall'] as num?)?.toDouble() ?? 40.0,
       bio: json['bio'] as String?,
       profileImageUrl: json['profileImageUrl'] as String?,
       languages: (json['languages'] as List<dynamic>?)?.cast<String>() ?? [],

@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../l10n/app_localizations.dart';
@@ -65,7 +67,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
       } else {
         await notifier.verifyPhoneOtp(widget.phone!, otp);
       }
-      if (mounted) context.go('/home');
+      if (mounted) context.go(AppRoutes.home);
     } catch (e) {
       setState(() {
         _errorText = _friendlyError(e);
@@ -97,11 +99,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
       _startTimer();
       setState(() => _errorText = null);
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: AppColors.error),
-        );
-      }
+      Get.showSnackbar(GetSnackBar(
+        message: e.toString().replaceAll('Exception:', '').trim(),
+        backgroundColor: AppColors.error,
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
+        snackPosition: SnackPosition.BOTTOM,
+      ));
     }
   }
 

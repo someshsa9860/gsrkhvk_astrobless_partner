@@ -1,22 +1,22 @@
 class EarningsSummary {
   const EarningsSummary({
-    required this.todayPaise,
-    required this.weekPaise,
-    required this.monthPaise,
-    required this.allTimePaise,
+    required this.today,
+    required this.week,
+    required this.month,
+    required this.allTime,
   });
 
-  final int todayPaise;
-  final int weekPaise;
-  final int monthPaise;
-  final int allTimePaise;
+  final double today;
+  final double week;
+  final double month;
+  final double allTime;
 
   factory EarningsSummary.fromJson(Map<String, dynamic> json) {
     return EarningsSummary(
-      todayPaise: json['todayPaise'] as int? ?? 0,
-      weekPaise: json['weekPaise'] as int? ?? 0,
-      monthPaise: json['monthPaise'] as int? ?? 0,
-      allTimePaise: json['allTimePaise'] as int? ?? 0,
+      today: (json['today'] as num?)?.toDouble() ?? 0.0,
+      week: (json['week'] as num?)?.toDouble() ?? 0.0,
+      month: (json['month'] as num?)?.toDouble() ?? 0.0,
+      allTime: (json['allTime'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
@@ -35,9 +35,9 @@ class EarningTransaction {
 
   final String id;
   final String consultationId;
-  final int gross;
+  final double gross;
   final double commissionPct;
-  final int net;
+  final double net;
   final DateTime createdAt;
   final String? customerName;
   final String? type;
@@ -46,9 +46,9 @@ class EarningTransaction {
     return EarningTransaction(
       id: json['id'] as String,
       consultationId: json['consultationId'] as String,
-      gross: json['gross'] as int? ?? 0,
+      gross: (json['gross'] as num?)?.toDouble() ?? 0.0,
       commissionPct: (json['commissionPct'] as num?)?.toDouble() ?? 30.0,
-      net: json['net'] as int? ?? 0,
+      net: (json['net'] as num?)?.toDouble() ?? 0.0,
       createdAt: DateTime.parse(json['createdAt'] as String),
       customerName: json['customerName'] as String?,
       type: json['type'] as String?,
@@ -67,7 +67,7 @@ class Payout {
   });
 
   final String id;
-  final int amount;
+  final double amount;
   final String status; // queued | processing | processed | failed
   final DateTime periodStart;
   final DateTime periodEnd;
@@ -76,7 +76,7 @@ class Payout {
   factory Payout.fromJson(Map<String, dynamic> json) {
     return Payout(
       id: json['id'] as String,
-      amount: json['amount'] as int? ?? 0,
+      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
       status: json['status'] as String,
       periodStart: DateTime.parse(json['periodStart'] as String),
       periodEnd: DateTime.parse(json['periodEnd'] as String),
