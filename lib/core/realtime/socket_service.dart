@@ -9,6 +9,8 @@ enum SocketConnectionState { disconnected, connecting, connected }
 
 class SocketService {
   io.Socket? _socket;
+  io.Socket? _presenceSocket;
+  Timer? _heartbeatTimer;
 
   final _incomingRequestCtrl = StreamController<IncomingRequest>.broadcast();
   final _newMessageCtrl = StreamController<ChatMessage>.broadcast();
@@ -18,6 +20,7 @@ class SocketService {
   final _callEndedCtrl = StreamController<Map<String, dynamic>>.broadcast();
   final _connectionCtrl = StreamController<SocketConnectionState>.broadcast();
   final _lowBalanceCtrl = StreamController<Map<String, dynamic>>.broadcast();
+  final _presenceUpdateCtrl = StreamController<Map<String, dynamic>>.broadcast();
 
   Stream<IncomingRequest> get onIncomingRequest => _incomingRequestCtrl.stream;
   Stream<ChatMessage> get onNewMessage => _newMessageCtrl.stream;
@@ -27,6 +30,8 @@ class SocketService {
   Stream<Map<String, dynamic>> get onCallEnded => _callEndedCtrl.stream;
   Stream<SocketConnectionState> get onConnectionChanged => _connectionCtrl.stream;
   Stream<Map<String, dynamic>> get onLowBalance => _lowBalanceCtrl.stream;
+  // Emits presence:update events from the /presence namespace
+  Stream<Map<String, dynamic>> get onPresenceUpdate => _presenceUpdateCtrl.stream;
 
   bool get isConnected => _socket?.connected ?? false;
 
@@ -119,9 +124,59 @@ class SocketService {
         debugPrint('[Socket] billing:lowBalance parse error: $e');
       }
     });
+
+    _connectPresence(accessToken);
+  }
+
+  void _connectPresence(String accessToken) {
+    _presenceSocket?.disconnect();
+
+    _presenceSocket = io.io(
+      '${AppConfig.wsBaseUrl}/presence',
+      io.OptionBuilder()
+          .setTransports(['websocket'])
+          .setAuth({'token': accessToken})
+          .enableAutoConnect()
+          .setReconnectionAttempts(10)
+          .setReconnectionDelay(3000)
+          .build(),
+    );
+
+    _presenceSocket!.onConnect((_) {
+      debugPrint('[Presence] connected');
+      // Start heartbeat every 60s to keep server-side TTL alive (TTL is 90s)
+      _heartbeatTimer?.cancel();
+      _heartbeatTimer = Timer.periodic(const Duration(seconds: 60), (_) {
+        _presenceSocket?.emit('presence:heartbeat', {});
+      });
+    });
+
+    _presenceSocket!.onDisconnect((_) {
+      debugPrint('[Presence] disconnected');
+      _heartbeatTimer?.cancel();
+    });
+
+    _presenceSocket!.onConnectError((e) {
+      debugPrint('[Presence] connect error: $e');
+    });
+
+    _presenceSocket!.on('presence:update', (data) {
+      try {
+        _presenceUpdateCtrl.add(_toMap(data));
+      } catch (e) {
+        debugPrint('[Presence] presence:update parse error: $e');
+      }
+    });
+  }
+
+  void setInvisible() {
+    _presenceSocket?.emit('presence:invisible', {});
   }
 
   void disconnect() {
+    _heartbeatTimer?.cancel();
+    _presenceSocket?.disconnect();
+    _presenceSocket = null;
     _socket?.disconnect();
     _socket = null;
   }
@@ -175,6 +230,7 @@ class SocketService {
     _callEndedCtrl.close();
     _connectionCtrl.close();
     _lowBalanceCtrl.close();
+    _presenceUpdateCtrl.close();
   }
 
   Map<String, dynamic> _toMap(dynamic data) {
