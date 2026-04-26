@@ -25,10 +25,12 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   bool _muted = false;
   bool _speakerOn = true;
   bool _isEnding = false;
+  bool _customerLowBalance = false;
   int _secondsElapsed = 0;
   Timer? _elapsed;
   StreamSubscription? _callEndedSub;
   StreamSubscription? _billingTickSub;
+  StreamSubscription? _lowBalanceSub;
   BillingTick? _lastTick;
   String? _channelName;
   String? _agoraToken;
@@ -74,6 +76,14 @@ class _CallScreenState extends ConsumerState<CallScreen> {
         .where((t) => t.consultationId == widget.id)
         .listen((tick) {
       if (mounted) setState(() => _lastTick = tick);
+    });
+
+    _lowBalanceSub = ref
+        .read(socketServiceProvider)
+        .onLowBalance
+        .where((e) => e['consultationId'] == widget.id)
+        .listen((_) {
+      if (mounted) setState(() => _customerLowBalance = true);
     });
 
     _elapsed = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -170,6 +180,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     _elapsed?.cancel();
     _callEndedSub?.cancel();
     _billingTickSub?.cancel();
+    _lowBalanceSub?.cancel();
     _engine?.leaveChannel();
     _engine?.release();
     super.dispose();
@@ -230,17 +241,30 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceDark,
+                      color: _customerLowBalance
+                          ? AppColors.error.withValues(alpha: 0.15)
+                          : AppColors.surfaceDark,
                       borderRadius: BorderRadius.circular(20),
+                      border: _customerLowBalance
+                          ? Border.all(color: AppColors.error.withValues(alpha: 0.5))
+                          : null,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.timer_outlined, size: 14, color: AppColors.primary),
+                        Icon(
+                          _customerLowBalance ? Icons.warning_amber_rounded : Icons.timer_outlined,
+                          size: 14,
+                          color: _customerLowBalance ? AppColors.error : AppColors.primary,
+                        ),
                         const SizedBox(width: 6),
                         Text(
-                          '${(_lastTick!.remainingSeconds ~/ 60)}m left · ₹${(_lastTick!.balance / 100).toStringAsFixed(0)} balance',
-                          style: tt.labelMedium?.copyWith(color: AppColors.primary),
+                          _customerLowBalance
+                              ? 'Customer balance low — call may end soon'
+                              : '${(_lastTick!.remainingSeconds ~/ 60)}m left · ₹${_lastTick!.balance.toStringAsFixed(0)} balance',
+                          style: tt.labelMedium?.copyWith(
+                            color: _customerLowBalance ? AppColors.error : AppColors.primary,
+                          ),
                         ),
                       ],
                     ),

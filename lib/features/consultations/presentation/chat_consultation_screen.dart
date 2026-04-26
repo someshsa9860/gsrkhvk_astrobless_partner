@@ -25,10 +25,12 @@ class _ChatConsultationScreenState
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   bool _isTyping = false;
+  bool _customerLowBalance = false;
   Timer? _typingTimer;
   int _secondsLeft = 1800; // updated by billing ticks
   Timer? _localTimer;
   StreamSubscription? _endedSub;
+  StreamSubscription? _lowBalanceSub;
 
   @override
   void initState() {
@@ -47,6 +49,14 @@ class _ChatConsultationScreenState
         .listen((_) {
       if (mounted) context.pop();
     });
+
+    _lowBalanceSub = ref
+        .read(socketServiceProvider)
+        .onLowBalance
+        .where((e) => e['consultationId'] == widget.id)
+        .listen((_) {
+      if (mounted) setState(() => _customerLowBalance = true);
+    });
   }
 
   @override
@@ -56,6 +66,7 @@ class _ChatConsultationScreenState
     _typingTimer?.cancel();
     _localTimer?.cancel();
     _endedSub?.cancel();
+    _lowBalanceSub?.cancel();
     super.dispose();
   }
 
@@ -211,12 +222,28 @@ class _ChatConsultationScreenState
           // Billing bar
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            color: AppColors.surfaceDark,
+            color: _customerLowBalance
+                ? AppColors.error.withValues(alpha: 0.1)
+                : AppColors.surfaceDark,
             child: Row(
               children: [
-                const Icon(Icons.account_balance_wallet_outlined, size: 14, color: AppColors.textSecondary),
+                Icon(
+                  _customerLowBalance
+                      ? Icons.warning_amber_rounded
+                      : Icons.account_balance_wallet_outlined,
+                  size: 14,
+                  color: _customerLowBalance ? AppColors.error : AppColors.textSecondary,
+                ),
                 const SizedBox(width: 6),
-                Text(l10n.chatBillingBar, style: tt.labelSmall?.copyWith(color: AppColors.textSecondary)),
+                Text(
+                  _customerLowBalance
+                      ? 'Customer balance low — session may end soon'
+                      : l10n.chatBillingBar,
+                  style: tt.labelSmall?.copyWith(
+                    color: _customerLowBalance ? AppColors.error : AppColors.textSecondary,
+                    fontWeight: _customerLowBalance ? FontWeight.w600 : null,
+                  ),
+                ),
               ],
             ),
           ),

@@ -17,6 +17,7 @@ class SocketService {
   final _callIncomingCtrl = StreamController<CallIncoming>.broadcast();
   final _callEndedCtrl = StreamController<Map<String, dynamic>>.broadcast();
   final _connectionCtrl = StreamController<SocketConnectionState>.broadcast();
+  final _lowBalanceCtrl = StreamController<Map<String, dynamic>>.broadcast();
 
   Stream<IncomingRequest> get onIncomingRequest => _incomingRequestCtrl.stream;
   Stream<ChatMessage> get onNewMessage => _newMessageCtrl.stream;
@@ -25,6 +26,7 @@ class SocketService {
   Stream<CallIncoming> get onCallIncoming => _callIncomingCtrl.stream;
   Stream<Map<String, dynamic>> get onCallEnded => _callEndedCtrl.stream;
   Stream<SocketConnectionState> get onConnectionChanged => _connectionCtrl.stream;
+  Stream<Map<String, dynamic>> get onLowBalance => _lowBalanceCtrl.stream;
 
   bool get isConnected => _socket?.connected ?? false;
 
@@ -109,6 +111,14 @@ class SocketService {
         debugPrint('[Socket] call:ended parse error: $e');
       }
     });
+
+    _socket!.on('billing:lowBalance', (data) {
+      try {
+        _lowBalanceCtrl.add(_toMap(data));
+      } catch (e) {
+        debugPrint('[Socket] billing:lowBalance parse error: $e');
+      }
+    });
   }
 
   void disconnect() {
@@ -164,6 +174,7 @@ class SocketService {
     _callIncomingCtrl.close();
     _callEndedCtrl.close();
     _connectionCtrl.close();
+    _lowBalanceCtrl.close();
   }
 
   Map<String, dynamic> _toMap(dynamic data) {
