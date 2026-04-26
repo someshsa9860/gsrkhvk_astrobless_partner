@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../../../l10n/app_localizations.dart';
@@ -82,6 +83,11 @@ class ProfileScreen extends StatelessWidget {
             child: _MenuSection(
               title: l10n.supportSection,
               items: [
+                _MenuItem(
+                  icon: Icons.confirmation_number_outlined,
+                  label: l10n.myTickets,
+                  onTap: () => context.push(AppRoutes.support),
+                ),
                 _MenuItem(
                   icon: Icons.help_outline,
                   label: l10n.helpFaq,

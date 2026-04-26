@@ -1185,6 +1185,41 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Accept'**
   String get accept;
+
+  String get supportTicketsTitle;
+  String get myTickets;
+  String get newTicket;
+  String get noTicketsYet;
+  String get noTicketsHint;
+  String get ticketDetailTitle;
+  String get closeTicketButton;
+  String get closeTicketTitle;
+  String get closeTicketBody;
+  String get ticketClosedBanner;
+  String get replyHint;
+  String get newTicketTitle;
+  String get subjectLabel;
+  String get subjectHint;
+  String get descriptionLabel;
+  String get descriptionHint;
+  String get categoryLabel;
+  String get submitTicket;
+  String get ticketCreated;
+  String get statusOpen;
+  String get statusInProgress;
+  String get statusWaitingOnUser;
+  String get statusResolved;
+  String get statusClosed;
+  String get priorityLow;
+  String get priorityMedium;
+  String get priorityHigh;
+  String get priorityUrgent;
+  String get categoryPayment;
+  String get categoryConsultation;
+  String get categoryKyc;
+  String get categoryPuja;
+  String get categoryOrder;
+  String get categoryGeneral;
 }
 
 class _AppLocalizationsDelegate

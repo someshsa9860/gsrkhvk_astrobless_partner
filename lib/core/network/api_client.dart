@@ -333,6 +333,51 @@ class ApiClient {
     await post(Endpoints.notifications.registerFcmToken,
         data: {'token': token, 'platform': platform});
   }
+
+  // ── Support Tickets ────────────────────────────────────────────────────────
+
+  Future<Map<String, dynamic>> fetchSupportTickets({
+    String? status,
+    int page = 1,
+    int limit = 20,
+  }) async {
+    final res = await get(Endpoints.support.list, queryParameters: {
+      'page': page,
+      'limit': limit,
+      if (status != null) 'status': status,
+    });
+    return res.data['data'] as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> fetchSupportTicket(String id) async {
+    final res = await get(Endpoints.support.detail(id));
+    return res.data['data'] as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> createSupportTicket({
+    required String category,
+    required String subject,
+    required String description,
+    String? linkedConsultationId,
+  }) async {
+    final res = await post(Endpoints.support.create, data: {
+      'category': category,
+      'subject': subject,
+      'description': description,
+      if (linkedConsultationId != null) 'linkedConsultationId': linkedConsultationId,
+    });
+    return res.data['data'] as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> addSupportTicketMessage(
+      String ticketId, String body) async {
+    final res = await post(Endpoints.support.addMessage(ticketId), data: {'body': body});
+    return res.data['data'] as Map<String, dynamic>;
+  }
+
+  Future<void> closeSupportTicket(String ticketId) async {
+    await post(Endpoints.support.close(ticketId));
+  }
 }
 
 // ─── Auth interceptor ──────────────────────────────────────────────────────

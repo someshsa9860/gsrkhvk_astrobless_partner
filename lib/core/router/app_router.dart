@@ -22,6 +22,9 @@ import '../../features/onboarding/presentation/kyc_screen.dart';
 import '../../features/kundli/presentation/kundli_request_list_screen.dart';
 import '../../features/kundli/presentation/kundli_request_detail_screen.dart';
 import '../../features/kundli/presentation/kundli_report_composer_screen.dart';
+import '../../features/support/presentation/support_screen.dart';
+import '../../features/support/presentation/ticket_detail_screen.dart';
+import '../../features/support/presentation/new_ticket_screen.dart';
 import '../auth/token_storage.dart';
 import 'app_routes.dart';
 
@@ -127,6 +130,21 @@ GoRouter buildRouter() {
       GoRoute(
         path: '/kundli-requests/:id/compose',
         builder: (_, state) => KundliReportComposerScreen(id: state.pathParameters['id']!),
+      ),
+
+      // ── Support tickets ───────────────────────────────────────────────
+      GoRoute(
+        path: AppRoutes.support,
+        builder: (_, __) => const SupportScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.supportNewTicket,
+        builder: (_, __) => const NewTicketScreen(),
+      ),
+      GoRoute(
+        path: '/support/tickets/:id',
+        builder: (_, state) =>
+            TicketDetailScreen(ticketId: state.pathParameters['id']!),
       ),
 
       // ── Home shell (bottom nav) ───────────────────────────────────────

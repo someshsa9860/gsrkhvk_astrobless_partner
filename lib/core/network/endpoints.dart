@@ -31,6 +31,9 @@ abstract final class Endpoints {
   /// In-app notification routes (`/notifications/*`).
   static const notifications = _NotificationEndpoints._();
 
+  /// Support ticket routes (`/support/*`).
+  static const support = _SupportEndpoints._();
+
   /// Image upload route (`/upload/*`).
   static const uploads = _UploadEndpoints._();
 }
@@ -185,4 +188,25 @@ final class _UploadEndpoints {
 
   /// `POST` – Upload an image (multipart/form-data). Legacy — kept for compat.
   String get image => '/upload/image';
+}
+
+// ─── Support Tickets ───────────────────────────────────────────────────────
+
+final class _SupportEndpoints {
+  const _SupportEndpoints._();
+
+  /// `POST` – Create a new support ticket.
+  String get create => '/support/tickets';
+
+  /// `GET` – List my support tickets.
+  String get list => '/support/tickets';
+
+  /// `GET` – Get a single support ticket by [id].
+  String detail(String id) => '/support/tickets/$id';
+
+  /// `POST` – Post a reply message to a ticket.
+  String addMessage(String id) => '/support/tickets/$id/messages';
+
+  /// `POST` – Close a support ticket.
+  String close(String id) => '/support/tickets/$id/close';
 }

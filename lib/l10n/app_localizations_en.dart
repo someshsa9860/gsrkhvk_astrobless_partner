@@ -571,4 +571,106 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accept => 'Accept';
+
+  @override
+  String get supportTicketsTitle => 'Support Tickets';
+
+  @override
+  String get myTickets => 'My Tickets';
+
+  @override
+  String get newTicket => 'New Ticket';
+
+  @override
+  String get noTicketsYet => 'No tickets yet';
+
+  @override
+  String get noTicketsHint => 'Tap + to submit a support request';
+
+  @override
+  String get ticketDetailTitle => 'Ticket Detail';
+
+  @override
+  String get closeTicketButton => 'Close Ticket';
+
+  @override
+  String get closeTicketTitle => 'Close this ticket?';
+
+  @override
+  String get closeTicketBody => "You won't be able to reply once closed.";
+
+  @override
+  String get ticketClosedBanner => 'This ticket is closed';
+
+  @override
+  String get replyHint => 'Type your reply...';
+
+  @override
+  String get newTicketTitle => 'New Support Ticket';
+
+  @override
+  String get subjectLabel => 'Subject';
+
+  @override
+  String get subjectHint => 'Brief summary of your issue';
+
+  @override
+  String get descriptionLabel => 'Description';
+
+  @override
+  String get descriptionHint => 'Describe the issue in detail...';
+
+  @override
+  String get categoryLabel => 'Category';
+
+  @override
+  String get submitTicket => 'Submit Ticket';
+
+  @override
+  String get ticketCreated => 'Ticket submitted successfully';
+
+  @override
+  String get statusOpen => 'Open';
+
+  @override
+  String get statusInProgress => 'In Progress';
+
+  @override
+  String get statusWaitingOnUser => 'Awaiting Reply';
+
+  @override
+  String get statusResolved => 'Resolved';
+
+  @override
+  String get statusClosed => 'Closed';
+
+  @override
+  String get priorityLow => 'Low';
+
+  @override
+  String get priorityMedium => 'Medium';
+
+  @override
+  String get priorityHigh => 'High';
+
+  @override
+  String get priorityUrgent => 'Urgent';
+
+  @override
+  String get categoryPayment => 'Payment';
+
+  @override
+  String get categoryConsultation => 'Consultation';
+
+  @override
+  String get categoryKyc => 'KYC';
+
+  @override
+  String get categoryPuja => 'Puja';
+
+  @override
+  String get categoryOrder => 'Order';
+
+  @override
+  String get categoryGeneral => 'General';
 }

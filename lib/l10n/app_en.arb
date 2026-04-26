@@ -563,5 +563,107 @@
   "@decline": {},
 
   "accept": "Accept",
-  "@accept": {}
+  "@accept": {},
+
+  "supportTicketsTitle": "Support Tickets",
+  "@supportTicketsTitle": {},
+
+  "myTickets": "My Tickets",
+  "@myTickets": {},
+
+  "newTicket": "New Ticket",
+  "@newTicket": {},
+
+  "noTicketsYet": "No tickets yet",
+  "@noTicketsYet": {},
+
+  "noTicketsHint": "Tap + to submit a support request",
+  "@noTicketsHint": {},
+
+  "ticketDetailTitle": "Ticket Detail",
+  "@ticketDetailTitle": {},
+
+  "closeTicketButton": "Close Ticket",
+  "@closeTicketButton": {},
+
+  "closeTicketTitle": "Close this ticket?",
+  "@closeTicketTitle": {},
+
+  "closeTicketBody": "You won't be able to reply once closed.",
+  "@closeTicketBody": {},
+
+  "ticketClosedBanner": "This ticket is closed",
+  "@ticketClosedBanner": {},
+
+  "replyHint": "Type your reply...",
+  "@replyHint": {},
+
+  "newTicketTitle": "New Support Ticket",
+  "@newTicketTitle": {},
+
+  "subjectLabel": "Subject",
+  "@subjectLabel": {},
+
+  "subjectHint": "Brief summary of your issue",
+  "@subjectHint": {},
+
+  "descriptionLabel": "Description",
+  "@descriptionLabel": {},
+
+  "descriptionHint": "Describe the issue in detail...",
+  "@descriptionHint": {},
+
+  "categoryLabel": "Category",
+  "@categoryLabel": {},
+
+  "submitTicket": "Submit Ticket",
+  "@submitTicket": {},
+
+  "ticketCreated": "Ticket submitted successfully",
+  "@ticketCreated": {},
+
+  "statusOpen": "Open",
+  "@statusOpen": {},
+
+  "statusInProgress": "In Progress",
+  "@statusInProgress": {},
+
+  "statusWaitingOnUser": "Awaiting Reply",
+  "@statusWaitingOnUser": {},
+
+  "statusResolved": "Resolved",
+  "@statusResolved": {},
+
+  "statusClosed": "Closed",
+  "@statusClosed": {},
+
+  "priorityLow": "Low",
+  "@priorityLow": {},
+
+  "priorityMedium": "Medium",
+  "@priorityMedium": {},
+
+  "priorityHigh": "High",
+  "@priorityHigh": {},
+
+  "priorityUrgent": "Urgent",
+  "@priorityUrgent": {},
+
+  "categoryPayment": "Payment",
+  "@categoryPayment": {},
+
+  "categoryConsultation": "Consultation",
+  "@categoryConsultation": {},
+
+  "categoryKyc": "KYC",
+  "@categoryKyc": {},
+
+  "categoryPuja": "Puja",
+  "@categoryPuja": {},
+
+  "categoryOrder": "Order",
+  "@categoryOrder": {},
+
+  "categoryGeneral": "General",
+  "@categoryGeneral": {}
 }

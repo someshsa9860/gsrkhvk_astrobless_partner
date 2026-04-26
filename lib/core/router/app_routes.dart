@@ -54,4 +54,10 @@ abstract final class AppRoutes {
 
   static const settings = '/settings';
   static const settingsChangePassword = '/settings/change-password';
+
+  // ── Support tickets ───────────────────────────────────────────────────────
+
+  static const support = '/support';
+  static const supportNewTicket = '/support/new';
+  static String supportTicketDetail(String id) => '/support/tickets/$id';
 }
