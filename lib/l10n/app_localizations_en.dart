@@ -673,4 +673,83 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categoryGeneral => 'General';
+
+  @override
+  String get inProgressTab => 'In Progress';
+
+  @override
+  String get kundliRequestsTitle => 'Kundli Requests';
+
+  @override
+  String get kundliRequestTitle => 'Kundli Request';
+
+  @override
+  String get birthDetailsSection => 'Birth Details';
+
+  @override
+  String get selectSla => 'Select SLA';
+
+  @override
+  String get acceptAndStart => 'Accept & Start';
+
+  @override
+  String get writeReport => 'Write Report';
+
+  @override
+  String get requestAccepted => 'Request accepted';
+
+  @override
+  String get requestDeclined => 'Request declined';
+
+  @override
+  String get declineRequest => 'Decline Request';
+
+  @override
+  String get reasonOptionalHint => 'Reason (optional)';
+
+  @override
+  String get reportCannotBeEmpty => 'Report cannot be empty';
+
+  @override
+  String get reportSubmittedNotice =>
+      'Report submitted — customer has been notified';
+
+  @override
+  String get submitReportTitle => 'Submit Report?';
+
+  @override
+  String get submitReportBody =>
+      'Once submitted, the customer will receive the report and you cannot edit it.';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get customerBalanceLowSession =>
+      'Customer balance low — session may end soon';
+
+  @override
+  String get customerBalanceLowCall =>
+      'Customer balance low — call may end soon';
+
+  @override
+  String get previewLabel => 'Preview';
+
+  @override
+  String get editLabel => 'Edit';
+
+  @override
+  String get dateLabel => 'Date';
+
+  @override
+  String get timeLabel => 'Time';
+
+  @override
+  String get placeLabel => 'Place';
+
+  @override
+  String get nameLabel => 'Name';
+
+  @override
+  String get questionLabel => 'Question';
 }

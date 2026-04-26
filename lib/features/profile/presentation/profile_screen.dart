@@ -31,7 +31,7 @@ class ProfileScreen extends StatelessWidget {
                 _MenuItem(
                   icon: Icons.person_outline,
                   label: l10n.editProfileTitle,
-                  onTap: () => context.push('/profile/edit'),
+                  onTap: () => context.push(AppRoutes.profileEdit),
                 ),
                 _MenuItem(
                   icon: Icons.star_outline,
@@ -45,7 +45,7 @@ class ProfileScreen extends StatelessWidget {
                   label: l10n.kycStatus,
                   trailing: l10n.kycApproved,
                   trailingColor: AppColors.success,
-                  onTap: () => context.push('/onboarding/kyc'),
+                  onTap: () => context.push(AppRoutes.onboardingKyc),
                 ),
                 _MenuItem(
                   icon: Icons.account_balance_outlined,
@@ -62,7 +62,7 @@ class ProfileScreen extends StatelessWidget {
                 _MenuItem(
                   icon: Icons.notifications_outlined,
                   label: l10n.notificationSettings,
-                  onTap: () => context.push('/settings'),
+                  onTap: () => context.push(AppRoutes.settings),
                 ),
                 _MenuItem(
                   icon: Icons.language_outlined,
@@ -149,7 +149,7 @@ class ProfileScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              context.go('/auth/phone');
+              context.go(AppRoutes.authPhone);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             child: Text(l10n.signOut),
@@ -171,7 +171,7 @@ class _ProfileHeader extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF1A1835), Color(0xFF0D0B1E)],
+          colors: [AppColors.inputDark, AppColors.bgDark],
         ),
       ),
       child: Column(

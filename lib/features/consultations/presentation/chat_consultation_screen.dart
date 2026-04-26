@@ -177,7 +177,7 @@ class _ChatConsultationScreenState
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Customer', style: tt.titleSmall?.copyWith(fontSize: 15)),
+                Text(l10n.customerLabel, style: tt.titleSmall?.copyWith(fontSize: 15)),
                 Text(
                   l10n.activeConsultation,
                   style: tt.labelSmall?.copyWith(color: AppColors.online),
@@ -237,7 +237,7 @@ class _ChatConsultationScreenState
                 const SizedBox(width: 6),
                 Text(
                   _customerLowBalance
-                      ? 'Customer balance low — session may end soon'
+                      ? l10n.customerBalanceLowSession
                       : l10n.chatBillingBar,
                   style: tt.labelSmall?.copyWith(
                     color: _customerLowBalance ? AppColors.error : AppColors.textSecondary,

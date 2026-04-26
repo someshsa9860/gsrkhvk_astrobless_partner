@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/format_utils.dart';
 import '../../../l10n/app_localizations.dart';
@@ -46,7 +47,7 @@ class _EarningsScreenState extends ConsumerState<EarningsScreen>
           IconButton(
             icon: const Icon(Icons.history_outlined),
             tooltip: 'Payout History',
-            onPressed: () => context.push('/earnings/payouts'),
+            onPressed: () => context.push(AppRoutes.earningsPayouts),
           ),
         ],
         bottom: TabBar(

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/app_localizations.dart';
 import '../data/kundli_repository.dart';
 import 'kundli_controller.dart';
 
@@ -39,10 +41,11 @@ class _KundliReportComposerScreenState
 
   Future<void> _submit() async {
     final text = _ctrl.text.trim();
+    final l10n = AppLocalizations.of(context);
     if (text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Report cannot be empty'),
+        SnackBar(
+          content: Text(l10n.reportCannotBeEmpty),
           backgroundColor: AppColors.error,
         ),
       );
@@ -56,12 +59,12 @@ class _KundliReportComposerScreenState
       await ref.read(kundliRepositoryProvider).submitReport(widget.id, text);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Report submitted — customer has been notified'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).reportSubmittedNotice),
             backgroundColor: AppColors.success,
           ),
         );
-        context.go('/kundli-requests');
+        context.go(AppRoutes.kundliRequests);
       }
     } catch (e) {
       if (mounted) {
@@ -74,24 +77,25 @@ class _KundliReportComposerScreenState
   }
 
   Future<bool> _showConfirmDialog() async {
+    final l10n = AppLocalizations.of(context);
     return await showDialog<bool>(
           context: context,
           builder: (_) => AlertDialog(
             backgroundColor: AppColors.cardDark,
-            title: const Text('Submit Report?', style: TextStyle(color: AppColors.textPrimary)),
-            content: const Text(
-              'Once submitted, the customer will receive the report and you cannot edit it.',
-              style: TextStyle(color: AppColors.textSecondary),
+            title: Text(l10n.submitReportTitle, style: const TextStyle(color: AppColors.textPrimary)),
+            content: Text(
+              l10n.submitReportBody,
+              style: const TextStyle(color: AppColors.textSecondary),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+                child: Text(l10n.cancel, style: const TextStyle(color: AppColors.textSecondary)),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-                child: const Text('Submit', style: TextStyle(color: Colors.white)),
+                child: Text(l10n.submit, style: const TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -109,7 +113,7 @@ class _KundliReportComposerScreenState
       backgroundColor: AppColors.bgDark,
       appBar: AppBar(
         backgroundColor: AppColors.bgDark,
-        title: Text(_previewing ? 'Preview' : 'Write Report'),
+        title: Text(_previewing ? AppLocalizations.of(context).previewLabel : AppLocalizations.of(context).writeReport),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () {
@@ -124,7 +128,7 @@ class _KundliReportComposerScreenState
           TextButton(
             onPressed: () => setState(() => _previewing = !_previewing),
             child: Text(
-              _previewing ? 'Edit' : 'Preview',
+              _previewing ? AppLocalizations.of(context).editLabel : AppLocalizations.of(context).previewLabel,
               style: const TextStyle(color: AppColors.accent),
             ),
           ),
@@ -178,9 +182,9 @@ class _KundliReportComposerScreenState
                           height: 22,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                      : const Text(
-                          'Submit Report',
-                          style: TextStyle(
+                      : Text(
+                          AppLocalizations.of(context).submitReportTitle,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,

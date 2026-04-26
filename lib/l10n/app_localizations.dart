@@ -1220,6 +1220,31 @@ abstract class AppLocalizations {
   String get categoryPuja;
   String get categoryOrder;
   String get categoryGeneral;
+  String get inProgressTab;
+  String get kundliRequestsTitle;
+  String get kundliRequestTitle;
+  String get birthDetailsSection;
+  String get selectSla;
+  String get acceptAndStart;
+  String get writeReport;
+  String get requestAccepted;
+  String get requestDeclined;
+  String get declineRequest;
+  String get reasonOptionalHint;
+  String get reportCannotBeEmpty;
+  String get reportSubmittedNotice;
+  String get submitReportTitle;
+  String get submitReportBody;
+  String get submit;
+  String get customerBalanceLowSession;
+  String get customerBalanceLowCall;
+  String get previewLabel;
+  String get editLabel;
+  String get dateLabel;
+  String get timeLabel;
+  String get placeLabel;
+  String get nameLabel;
+  String get questionLabel;
 }
 
 class _AppLocalizationsDelegate

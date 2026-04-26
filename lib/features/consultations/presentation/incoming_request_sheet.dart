@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/realtime/socket_service.dart';
 import '../../../l10n/app_localizations.dart';
@@ -68,9 +69,9 @@ class _IncomingRequestSheetState extends ConsumerState<IncomingRequestSheet> {
     final type = widget.request.type;
     final id = widget.request.consultationId;
     if (type == 'chat') {
-      context.push('/consultation/chat/$id');
+      context.push(AppRoutes.consultationChat(id));
     } else {
-      context.push('/consultation/call/$id');
+      context.push(AppRoutes.consultationCall(id));
     }
   }
 

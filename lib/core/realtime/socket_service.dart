@@ -18,6 +18,7 @@ class SocketService {
   final _consultationEndedCtrl = StreamController<Map<String, dynamic>>.broadcast();
   final _callIncomingCtrl = StreamController<CallIncoming>.broadcast();
   final _callEndedCtrl = StreamController<Map<String, dynamic>>.broadcast();
+  final _callTokenRefreshCtrl = StreamController<Map<String, dynamic>>.broadcast();
   final _connectionCtrl = StreamController<SocketConnectionState>.broadcast();
   final _lowBalanceCtrl = StreamController<Map<String, dynamic>>.broadcast();
   final _presenceUpdateCtrl = StreamController<Map<String, dynamic>>.broadcast();
@@ -28,6 +29,7 @@ class SocketService {
   Stream<Map<String, dynamic>> get onConsultationEnded => _consultationEndedCtrl.stream;
   Stream<CallIncoming> get onCallIncoming => _callIncomingCtrl.stream;
   Stream<Map<String, dynamic>> get onCallEnded => _callEndedCtrl.stream;
+  Stream<Map<String, dynamic>> get onCallTokenRefresh => _callTokenRefreshCtrl.stream;
   Stream<SocketConnectionState> get onConnectionChanged => _connectionCtrl.stream;
   Stream<Map<String, dynamic>> get onLowBalance => _lowBalanceCtrl.stream;
   // Emits presence:update events from the /presence namespace
@@ -122,6 +124,14 @@ class SocketService {
         _lowBalanceCtrl.add(_toMap(data));
       } catch (e) {
         debugPrint('[Socket] billing:lowBalance parse error: $e');
+      }
+    });
+
+    _socket!.on('call:tokenRefresh', (data) {
+      try {
+        _callTokenRefreshCtrl.add(_toMap(data));
+      } catch (e) {
+        debugPrint('[Socket] call:tokenRefresh parse error: $e');
       }
     });
 
@@ -228,6 +238,7 @@ class SocketService {
     _consultationEndedCtrl.close();
     _callIncomingCtrl.close();
     _callEndedCtrl.close();
+    _callTokenRefreshCtrl.close();
     _connectionCtrl.close();
     _lowBalanceCtrl.close();
     _presenceUpdateCtrl.close();

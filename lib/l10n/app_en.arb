@@ -665,5 +665,80 @@
   "@categoryOrder": {},
 
   "categoryGeneral": "General",
-  "@categoryGeneral": {}
+  "@categoryGeneral": {},
+
+  "inProgressTab": "In Progress",
+  "@inProgressTab": {},
+
+  "kundliRequestsTitle": "Kundli Requests",
+  "@kundliRequestsTitle": {},
+
+  "kundliRequestTitle": "Kundli Request",
+  "@kundliRequestTitle": {},
+
+  "birthDetailsSection": "Birth Details",
+  "@birthDetailsSection": {},
+
+  "selectSla": "Select SLA",
+  "@selectSla": {},
+
+  "acceptAndStart": "Accept & Start",
+  "@acceptAndStart": {},
+
+  "writeReport": "Write Report",
+  "@writeReport": {},
+
+  "requestAccepted": "Request accepted",
+  "@requestAccepted": {},
+
+  "requestDeclined": "Request declined",
+  "@requestDeclined": {},
+
+  "declineRequest": "Decline Request",
+  "@declineRequest": {},
+
+  "reasonOptionalHint": "Reason (optional)",
+  "@reasonOptionalHint": {},
+
+  "reportCannotBeEmpty": "Report cannot be empty",
+  "@reportCannotBeEmpty": {},
+
+  "reportSubmittedNotice": "Report submitted — customer has been notified",
+  "@reportSubmittedNotice": {},
+
+  "submitReportTitle": "Submit Report?",
+  "@submitReportTitle": {},
+
+  "submitReportBody": "Once submitted, the customer will receive the report and you cannot edit it.",
+  "@submitReportBody": {},
+
+  "submit": "Submit",
+  "@submit": {},
+
+  "customerBalanceLowSession": "Customer balance low — session may end soon",
+  "@customerBalanceLowSession": {},
+
+  "customerBalanceLowCall": "Customer balance low — call may end soon",
+  "@customerBalanceLowCall": {},
+
+  "previewLabel": "Preview",
+  "@previewLabel": {},
+
+  "editLabel": "Edit",
+  "@editLabel": {},
+
+  "dateLabel": "Date",
+  "@dateLabel": {},
+
+  "timeLabel": "Time",
+  "@timeLabel": {},
+
+  "placeLabel": "Place",
+  "@placeLabel": {},
+
+  "nameLabel": "Name",
+  "@nameLabel": {},
+
+  "questionLabel": "Question",
+  "@questionLabel": {}
 }

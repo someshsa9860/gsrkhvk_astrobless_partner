@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/format_utils.dart';
 import '../../../core/widgets/shimmer_box.dart';
@@ -87,7 +88,7 @@ class _ConsultationHistoryScreenState extends ConsumerState<ConsultationHistoryS
                 separatorBuilder: (_, __) => const SizedBox(height: 10),
                 itemBuilder: (ctx, i) => _ConsultationCard(
                   consultation: list[i],
-                  onTap: () => ctx.push('/consultation/${list[i].id}'),
+                  onTap: () => ctx.push(AppRoutes.consultationDetail(list[i].id)),
                 ).animate().fadeIn(delay: Duration(milliseconds: i * 60)),
               ),
       ),

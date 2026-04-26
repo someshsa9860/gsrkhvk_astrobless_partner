@@ -31,6 +31,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
   StreamSubscription? _callEndedSub;
   StreamSubscription? _billingTickSub;
   StreamSubscription? _lowBalanceSub;
+  StreamSubscription? _tokenRefreshSub;
   BillingTick? _lastTick;
   String? _channelName;
   String? _agoraToken;
@@ -84,6 +85,18 @@ class _CallScreenState extends ConsumerState<CallScreen> {
         .where((e) => e['consultationId'] == widget.id)
         .listen((_) {
       if (mounted) setState(() => _customerLowBalance = true);
+    });
+
+    _tokenRefreshSub = ref
+        .read(socketServiceProvider)
+        .onCallTokenRefresh
+        .where((e) => e['consultationId'] == widget.id)
+        .listen((e) {
+      final newToken = e['newToken'] as String?;
+      if (newToken != null) {
+        _engine?.renewToken(newToken);
+        debugPrint('[Agora] token renewed');
+      }
     });
 
     _elapsed = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -181,6 +194,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     _callEndedSub?.cancel();
     _billingTickSub?.cancel();
     _lowBalanceSub?.cancel();
+    _tokenRefreshSub?.cancel();
     _engine?.leaveChannel();
     _engine?.release();
     super.dispose();
@@ -214,7 +228,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A1A),
+      backgroundColor: AppColors.bgDark,
       body: SafeArea(
         child: Stack(
           children: [
@@ -260,8 +274,8 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                         const SizedBox(width: 6),
                         Text(
                           _customerLowBalance
-                              ? 'Customer balance low — call may end soon'
-                              : '${(_lastTick!.remainingSeconds ~/ 60)}m left · ₹${_lastTick!.balance.toStringAsFixed(2)} balance',
+                              ? l10n.customerBalanceLowCall
+                              : '${(_lastTick!.remainingSeconds ~/ 60)}m left · ₹${_lastTick!.balance.toStringAsFixed(0)} balance',
                           style: tt.labelMedium?.copyWith(
                             color: _customerLowBalance ? AppColors.error : AppColors.primary,
                           ),

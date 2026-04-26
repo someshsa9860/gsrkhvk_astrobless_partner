@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/format_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/kundli_models.dart';
 import 'kundli_controller.dart';
 
@@ -19,16 +21,13 @@ class _KundliRequestListScreenState extends ConsumerState<KundliRequestListScree
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
-  static const _tabs = [
-    (label: 'Pending', status: 'pending'),
-    (label: 'In Progress', status: 'inProgress'),
-    (label: 'Completed', status: 'completed'),
-  ];
+  // Labels resolved in build() via l10n
+  static const _tabStatuses = ['pending', 'inProgress', 'completed'];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController = TabController(length: _tabStatuses.length, vsync: this);
   }
 
   @override
@@ -39,11 +38,14 @@ class _KundliRequestListScreenState extends ConsumerState<KundliRequestListScree
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tabLabels = [l10n.pendingTab, l10n.inProgressTab, l10n.completedTab];
+
     return Scaffold(
       backgroundColor: AppColors.bgDark,
       appBar: AppBar(
         backgroundColor: AppColors.bgDark,
-        title: const Text('Kundli Requests'),
+        title: Text(l10n.kundliRequestsTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),
@@ -53,13 +55,13 @@ class _KundliRequestListScreenState extends ConsumerState<KundliRequestListScree
           indicatorColor: AppColors.accent,
           labelColor: AppColors.accent,
           unselectedLabelColor: AppColors.textSecondary,
-          tabs: _tabs.map((t) => Tab(text: t.label)).toList(),
+          tabs: tabLabels.map((label) => Tab(text: label)).toList(),
         ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: _tabs
-            .map((t) => _RequestList(status: t.status).animate().fadeIn())
+        children: _tabStatuses
+            .map((s) => _RequestList(status: s).animate().fadeIn())
             .toList(),
       ),
     );
@@ -72,6 +74,7 @@ class _RequestList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final tt = Theme.of(context).textTheme;
     final state = ref.watch(kundliRequestsProvider(status));
 
@@ -81,11 +84,11 @@ class _RequestList extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Failed to load', style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary)),
+            Text(l10n.errorGeneric, style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary)),
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () => ref.invalidate(kundliRequestsProvider(status)),
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -140,7 +143,7 @@ class _RequestCard extends StatelessWidget {
     };
 
     return GestureDetector(
-      onTap: () => context.push('/kundli-requests/${request.id}'),
+      onTap: () => context.push(AppRoutes.kundliRequestDetail(request.id)),
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),

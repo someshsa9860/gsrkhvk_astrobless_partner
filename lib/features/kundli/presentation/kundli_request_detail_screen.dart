@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/format_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../data/kundli_repository.dart';
 import '../domain/kundli_models.dart';
 import 'kundli_controller.dart';
@@ -21,7 +23,7 @@ class KundliRequestDetailScreen extends ConsumerWidget {
       backgroundColor: AppColors.bgDark,
       appBar: AppBar(
         backgroundColor: AppColors.bgDark,
-        title: const Text('Kundli Request'),
+        title: Text(AppLocalizations.of(context).kundliRequestTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),
@@ -33,11 +35,11 @@ class KundliRequestDetailScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Failed to load', style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary)),
+              Text(AppLocalizations.of(context).errorGeneric, style: tt.bodyMedium?.copyWith(color: AppColors.textSecondary)),
               const SizedBox(height: 12),
               ElevatedButton(
                 onPressed: () => ref.invalidate(kundliRequestDetailProvider(id)),
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -66,13 +68,14 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
     try {
       await ref.read(kundliRepositoryProvider).acceptRequest(widget.request.id, _selectedSla);
       if (mounted) {
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Request accepted'),
+          SnackBar(
+            content: Text(l10n.requestAccepted),
             backgroundColor: AppColors.success,
           ),
         );
-        context.go('/kundli-requests/${widget.request.id}/compose');
+        context.go(AppRoutes.kundliRequestCompose(widget.request.id));
       }
     } catch (e) {
       if (mounted) {
@@ -91,8 +94,9 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
     try {
       await ref.read(kundliRepositoryProvider).declineRequest(widget.request.id, reason);
       if (mounted) {
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Request declined'), backgroundColor: AppColors.error),
+          SnackBar(content: Text(l10n.requestDeclined), backgroundColor: AppColors.error),
         );
         context.pop();
       }
@@ -107,30 +111,31 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
   }
 
   Future<String?> _showDeclineDialog() async {
+    final l10n = AppLocalizations.of(context);
     final ctrl = TextEditingController();
     return showDialog<String>(
       context: context,
       builder: (_) => AlertDialog(
         backgroundColor: AppColors.cardDark,
-        title: const Text('Decline Request', style: TextStyle(color: AppColors.textPrimary)),
+        title: Text(l10n.declineRequest, style: const TextStyle(color: AppColors.textPrimary)),
         content: TextField(
           controller: ctrl,
           style: const TextStyle(color: AppColors.textPrimary),
-          decoration: const InputDecoration(
-            hintText: 'Reason (optional)',
-            hintStyle: TextStyle(color: AppColors.textDisabled),
+          decoration: InputDecoration(
+            hintText: l10n.reasonOptionalHint,
+            hintStyle: const TextStyle(color: AppColors.textDisabled),
           ),
           maxLines: 3,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text(l10n.cancel, style: const TextStyle(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, ctrl.text.trim().isEmpty ? 'No reason given' : ctrl.text.trim()),
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Decline'),
+            child: Text(l10n.decline),
           ),
         ],
       ),
@@ -139,6 +144,7 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final r = widget.request;
     final tt = Theme.of(context).textTheme;
     final isPending = r.status == 'pending';
@@ -148,25 +154,25 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
       padding: const EdgeInsets.all(20),
       children: [
         _InfoCard(
-          title: 'Customer',
+          title: l10n.customerLabel,
           children: [
-            _InfoRow(icon: Icons.person_outline, label: 'Name', value: r.customerName),
+            _InfoRow(icon: Icons.person_outline, label: l10n.nameLabel, value: r.customerName),
           ],
         ).animate().fadeIn(),
         const SizedBox(height: 12),
         _InfoCard(
-          title: 'Birth Details',
+          title: l10n.birthDetailsSection,
           children: [
-            _InfoRow(icon: Icons.cake_outlined, label: 'Date', value: formatDate(r.birthDate)),
+            _InfoRow(icon: Icons.cake_outlined, label: l10n.dateLabel, value: formatDate(r.birthDate)),
             if (r.birthTime != null)
-              _InfoRow(icon: Icons.access_time_outlined, label: 'Time', value: r.birthTime!),
-            _InfoRow(icon: Icons.location_on_outlined, label: 'Place', value: r.birthPlace),
+              _InfoRow(icon: Icons.access_time_outlined, label: l10n.timeLabel, value: r.birthTime!),
+            _InfoRow(icon: Icons.location_on_outlined, label: l10n.placeLabel, value: r.birthPlace),
           ],
         ).animate().fadeIn(delay: 60.ms),
         if (r.question != null) ...[
           const SizedBox(height: 12),
           _InfoCard(
-            title: 'Question',
+            title: l10n.questionLabel,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -183,16 +189,16 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
         ],
         const SizedBox(height: 12),
         _InfoCard(
-          title: 'Earnings',
+          title: l10n.earnings,
           children: [
             _InfoRow(
               icon: Icons.account_balance_wallet_outlined,
-              label: 'Your earning',
+              label: l10n.yourEarnings,
               value: formatCurrencyExact(r.priceAtOrder * 0.7),
             ),
             _InfoRow(
               icon: Icons.receipt_outlined,
-              label: 'Customer paid',
+              label: l10n.customerPaid,
               value: formatCurrencyExact(r.priceAtOrder),
             ),
           ],
@@ -200,7 +206,7 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
         if (isPending) ...[
           const SizedBox(height: 24),
           Text(
-            'Select SLA',
+            l10n.selectSla,
             style: tt.titleSmall?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
           ).animate().fadeIn(delay: 180.ms),
           const SizedBox(height: 8),
@@ -256,7 +262,7 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
                   ),
                   child: _declining
                       ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Text('Decline'),
+                      : Text(l10n.decline),
                 ),
               ),
               const SizedBox(width: 12),
@@ -271,7 +277,7 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
                   ),
                   child: _accepting
                       ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Text('Accept & Start', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                      : Text(l10n.acceptAndStart, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
                 ),
               ),
             ],
@@ -283,9 +289,9 @@ class _DetailBodyState extends ConsumerState<_DetailBody> {
             width: double.infinity,
             height: 50,
             child: ElevatedButton.icon(
-              onPressed: () => context.push('/kundli-requests/${r.id}/compose'),
+              onPressed: () => context.push(AppRoutes.kundliRequestCompose(r.id)),
               icon: const Icon(Icons.edit_outlined, color: Colors.white),
-              label: const Text('Write Report', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              label: Text(l10n.writeReport, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

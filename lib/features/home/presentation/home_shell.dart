@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/auth/token_storage.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/realtime/socket_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/offline_banner.dart';
@@ -48,7 +49,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ref.listen(callIncomingProvider, (_, next) {
       next.whenData((call) {
         if (mounted) {
-          context.push('/consultation/call/${call.consultationId}');
+          context.push(AppRoutes.consultationCall(call.consultationId));
         }
       });
     });

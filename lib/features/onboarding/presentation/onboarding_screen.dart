@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
@@ -71,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     setState(() => _isSubmitting = true);
     await Future.delayed(const Duration(milliseconds: 1200));
     if (mounted) {
-      context.go('/home');
+      context.go(AppRoutes.home);
     }
   }
 

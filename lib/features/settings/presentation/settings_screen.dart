@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -95,7 +96,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.lock_outline,
             iconColor: AppColors.error,
             label: l10n.changePassword,
-            onTap: () => context.push('/settings/change-password'),
+            onTap: () => context.push(AppRoutes.settingsChangePassword),
           ).animate().fadeIn(delay: 260.ms),
           _NavTile(
             icon: Icons.devices_outlined,

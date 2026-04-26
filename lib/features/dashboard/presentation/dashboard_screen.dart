@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/format_utils.dart';
 import '../../../core/widgets/shimmer_box.dart';
@@ -101,11 +102,11 @@ class DashboardScreen extends ConsumerWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.notifications_outlined, color: AppColors.textSecondary),
-          onPressed: () => context.push('/notifications'),
+          onPressed: () => context.push(AppRoutes.notifications),
         ),
         IconButton(
           icon: const Icon(Icons.settings_outlined, color: AppColors.textSecondary),
-          onPressed: () => context.push('/settings'),
+          onPressed: () => context.push(AppRoutes.settings),
         ),
         const SizedBox(width: 4),
       ],
@@ -334,13 +335,13 @@ class _QuickActions extends StatelessWidget {
         const SizedBox(height: 12),
         Row(
           children: [
-            _ActionChip(label: l10n.myProfile, icon: Icons.person_outline, onTap: () => context.go('/profile')),
+            _ActionChip(label: l10n.myProfile, icon: Icons.person_outline, onTap: () => context.go(AppRoutes.profile)),
             const SizedBox(width: 8),
-            _ActionChip(label: l10n.earnings, icon: Icons.bar_chart_rounded, onTap: () => context.go('/earnings')),
+            _ActionChip(label: l10n.earnings, icon: Icons.bar_chart_rounded, onTap: () => context.go(AppRoutes.earnings)),
             const SizedBox(width: 8),
-            _ActionChip(label: l10n.consults, icon: Icons.chat_bubble_outline, onTap: () => context.go('/consultations')),
+            _ActionChip(label: l10n.consults, icon: Icons.chat_bubble_outline, onTap: () => context.go(AppRoutes.consultations)),
             const SizedBox(width: 8),
-            _ActionChip(label: 'Kundli', icon: Icons.auto_stories_outlined, onTap: () => context.push('/kundli-requests')),
+            _ActionChip(label: 'Kundli', icon: Icons.auto_stories_outlined, onTap: () => context.push(AppRoutes.kundliRequests)),
           ],
         ),
       ],
@@ -406,7 +407,7 @@ class _RecentActivity extends StatelessWidget {
           children: [
             Text(l10n.recentConsultations, style: tt.titleMedium?.copyWith(color: AppColors.textPrimary)),
             TextButton(
-              onPressed: () => context.go('/consultations'),
+              onPressed: () => context.go(AppRoutes.consultations),
               child: Text(l10n.seeAll),
             ),
           ],
