@@ -1,38 +1,49 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+
 class AppConfig {
   AppConfig._();
 
-  static const apiBaseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'https://api.astrology.qikbill.in/v1/astrologer',
-  );
+  static const String _prodApiBase = 'https://api.astrology.qikbill.in';
+  static const String _localApiBase = 'http://10.0.2.2:3000'; // Android emulator
+  static const String _localApiBaseIos = 'http://localhost:3000'; // iOS simulator
 
-  static const publicApiBaseUrl = String.fromEnvironment(
-    'PUBLIC_API_BASE_URL',
-    defaultValue: 'https://api.astrology.qikbill.in/v1/public',
-  );
+  static String get _devBase =>
+      Platform.isAndroid ? _localApiBase : _localApiBaseIos;
 
-  static const wsBaseUrl = String.fromEnvironment(
-    'WS_BASE_URL',
-    defaultValue: 'wss://api.astrology.qikbill.in',
-  );
+  static String get _base =>
+      const String.fromEnvironment('API_HOST').isNotEmpty
+          ? const String.fromEnvironment('API_HOST')
+          : (kDebugMode ? _devBase : _prodApiBase);
 
-  static const agoraAppId = String.fromEnvironment('AGORA_APP_ID', defaultValue: '');
+  static String get apiBaseUrl => '$_base/v1/astrologer';
+  static String get publicApiBaseUrl => '$_base/v1/public';
+  static String get wsBaseUrl =>
+      kDebugMode && const String.fromEnvironment('API_HOST').isEmpty
+          ? (Platform.isAndroid ? 'ws://10.0.2.2:3000' : 'ws://localhost:3000')
+          : const String.fromEnvironment('API_HOST').isNotEmpty
+              ? const String.fromEnvironment('API_HOST')
+                  .replaceFirst('http', 'ws')
+              : 'wss://api.astrology.qikbill.in';
 
-  static const sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
-
-  static const version = String.fromEnvironment('APP_VERSION', defaultValue: '1.0.0');
-
-  static const isDev = bool.fromEnvironment('IS_DEV', defaultValue: true);
+  static const agoraAppId =
+      String.fromEnvironment('AGORA_APP_ID', defaultValue: '');
+  static const sentryDsn =
+      String.fromEnvironment('SENTRY_DSN', defaultValue: '');
+  static const version =
+      String.fromEnvironment('APP_VERSION', defaultValue: '1.0.0');
+  static bool get isDev => kDebugMode;
 
   static const appName = 'Astrobless Partner';
 
-  // Client security — all disabled by default; enable per environment via --dart-define
-  static const enableCertPinning = bool.fromEnvironment('ENABLE_CERT_PINNING', defaultValue: false);
-  static const enableRequestSigning = bool.fromEnvironment('ENABLE_REQUEST_SIGNING', defaultValue: false);
-  static const enableAppAttestation = bool.fromEnvironment('ENABLE_APP_ATTESTATION', defaultValue: false);
-  // SHA-256 fingerprint of server leaf cert (colon-separated hex, any case)
-  // Get with: openssl s_client -connect api.astrology.qikbill.in:443 </dev/null 2>/dev/null | openssl x509 -fingerprint -sha256 -noout
-  static const certSha256Fingerprint = String.fromEnvironment('CERT_SHA256_FINGERPRINT', defaultValue: '');
-  // Per-audience HMAC secret — must match HMAC_SECRET_ASTROLOGER on backend
-  static const hmacSecret = String.fromEnvironment('HMAC_SECRET', defaultValue: '');
+  static const enableCertPinning =
+      bool.fromEnvironment('ENABLE_CERT_PINNING', defaultValue: false);
+  static const enableRequestSigning =
+      bool.fromEnvironment('ENABLE_REQUEST_SIGNING', defaultValue: false);
+  static const enableAppAttestation =
+      bool.fromEnvironment('ENABLE_APP_ATTESTATION', defaultValue: false);
+  static const certSha256Fingerprint =
+      String.fromEnvironment('CERT_SHA256_FINGERPRINT', defaultValue: '');
+  static const hmacSecret =
+      String.fromEnvironment('HMAC_SECRET', defaultValue: '');
 }
