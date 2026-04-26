@@ -4,7 +4,8 @@ import 'package:flutter/foundation.dart';
 class AppConfig {
   AppConfig._();
 
-  static const String _prodApiBase = 'https://api.astrology.qikbill.in';
+  static const String _prodApiBase =
+      String.fromEnvironment('API_HOST', defaultValue: 'https://api.astrobless.app');
   static const String _localApiBase = 'http://10.0.2.2:3000'; // Android emulator
   static const String _localApiBaseIos = 'http://localhost:3000'; // iOS simulator
 
@@ -24,7 +25,7 @@ class AppConfig {
           : const String.fromEnvironment('API_HOST').isNotEmpty
               ? const String.fromEnvironment('API_HOST')
                   .replaceFirst('http', 'ws')
-              : 'wss://api.astrology.qikbill.in';
+              : 'wss://api.astrobless.app';
 
   static const agoraAppId =
       String.fromEnvironment('AGORA_APP_ID', defaultValue: '');
