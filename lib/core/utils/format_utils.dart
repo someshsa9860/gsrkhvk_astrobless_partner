@@ -6,7 +6,7 @@ String formatMoney(double amount, {String currency = '₹'}) {
   } else if (amount >= 1000) {
     return '$currency${(amount / 1000).toStringAsFixed(1)}K';
   }
-  return '$currency${amount.toStringAsFixed(0)}';
+  return '$currency${amount.toStringAsFixed(2)}';
 }
 
 String formatMoneyExact(double amount, {String currency = '₹'}) {

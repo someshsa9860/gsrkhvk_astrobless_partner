@@ -261,7 +261,7 @@ class _CallScreenState extends ConsumerState<CallScreen> {
                         Text(
                           _customerLowBalance
                               ? 'Customer balance low — call may end soon'
-                              : '${(_lastTick!.remainingSeconds ~/ 60)}m left · ₹${_lastTick!.balance.toStringAsFixed(0)} balance',
+                              : '${(_lastTick!.remainingSeconds ~/ 60)}m left · ₹${_lastTick!.balance.toStringAsFixed(2)} balance',
                           style: tt.labelMedium?.copyWith(
                             color: _customerLowBalance ? AppColors.error : AppColors.primary,
                           ),

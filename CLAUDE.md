@@ -58,7 +58,7 @@ Read these before every coding session:
 1. **Follow root `CLAUDE.md` exactly.** When in doubt, quote the section and ask.
 2. **`camelCase` everywhere in Dart code.** `snake_case` for file names (Dart convention). See root CLAUDE.md §3.
 3. **No token in insecure storage.** Access token and refresh token live in `flutter_secure_storage` only. Never `SharedPreferences`, never `Hive`, never in-memory between restarts.
-4. **Money is `int` everywhere.** Stored as the smallest currency unit (1/100 of ₹1). Never `double` for money. Convert to `₹` only at the display layer using `formatAmount()`.
+4. **Money is `double` everywhere.** Stored as decimal rupees (e.g. 12.50 = ₹12.50). Never integer paise subunits. Convert to `₹` only at the display layer using `formatMoney()` or `formatMoneyExact()`.
 5. **JWT audience is `astrobless.astrologer`.** Never send requests to `/v1/customer/*` or `/v1/admin/*` routes.
 6. **All API calls go through the `ApiClient` singleton** (Dio instance). Never use `http` package or raw `HttpClient`.
 7. **Riverpod only for state.** No `setState` in non-trivial widgets. No `Provider` (legacy). No `GetX`.
@@ -765,7 +765,7 @@ Customer app                  Backend                    Partner app
 
 ### 13.3 DB table reference
 
-The `kundliRequests` table (defined in root `CLAUDE.md` §12 area, managed by backend migrations) tracks each request. Key fields: `id`, `customerId`, `astrologerId`, `status` (pending → accepted → inProgress → completed → declined → expired), `birthDate`, `birthTime`, `birthPlace`, `birthLat`, `birthLng`, `question`, `priceAtOrder` (stored as smallest currency unit — 1/100 of ₹1), `commissionPct`, `slaDueAt` (set on accept), `reportText`, `reportPdfUrl`, `declineReason`, `astrologerNotes` (private), `traceId`.
+The `kundliRequests` table (defined in root `CLAUDE.md` §12 area, managed by backend migrations) tracks each request. Key fields: `id`, `customerId`, `astrologerId`, `status` (pending → accepted → inProgress → completed → declined → expired), `birthDate`, `birthTime`, `birthPlace`, `birthLat`, `birthLng`, `question`, `priceAtOrder` (Float, in ₹ e.g. 12.50 = ₹12.50), `commissionPct`, `slaDueAt` (set on accept), `reportText`, `reportPdfUrl`, `declineReason`, `astrologerNotes` (private), `traceId`.
 
 ### 13.4 Backend endpoints (astrologer side)
 
@@ -795,7 +795,7 @@ GET  /v1/astrologer/kundli-requests/:id/chart   → { planets, houses, aspects }
 1. **Basic profile** — displayName, bio, gender, DOB
 2. **Specialties** — multi-select from predefined list (Vedic, Tarot, Numerology, Vastu, etc.)
 3. **Languages** — multi-select
-4. **Pricing** — `pricePerMinChat`, `pricePerMinCall` (int, stored as smallest currency unit; min configurable via backend settings)
+4. **Pricing** — `pricePerMinChat`, `pricePerMinCall` (double, in ₹ e.g. 12.50 = ₹12.50; min configurable via backend settings)
 5. **KYC documents** — upload Aadhaar front/back + PAN (or passport for non-Indian) via S3 pre-signed URL
 6. **Bank account / UPI** — for payouts; stored server-side encrypted
 
