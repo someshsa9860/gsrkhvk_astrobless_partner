@@ -12,6 +12,12 @@ class SocketService {
   io.Socket? _presenceSocket;
   Timer? _heartbeatTimer;
 
+  // Tracks whether the astrologer manually went offline (vs network drop).
+  // true  = manual offline → reconnect must NOT auto-restore online
+  // false = network drop  → reconnect auto-restores online if they were online
+  bool _manualOffline = false;
+  bool _lastKnownOnline = false;
+
   final _incomingRequestCtrl = StreamController<IncomingRequest>.broadcast();
   final _newMessageCtrl = StreamController<ChatMessage>.broadcast();
   final _billingTickCtrl = StreamController<BillingTick>.broadcast();
@@ -56,6 +62,11 @@ class SocketService {
     _socket!.onConnect((_) {
       debugPrint('[Socket] connected');
       _connectionCtrl.add(SocketConnectionState.connected);
+      // Auto-restore presence after network reconnect only if NOT manually offline
+      if (_lastKnownOnline && !_manualOffline) {
+        _socket?.emit('presence:set', {'isOnline': true, 'isBusy': false});
+        debugPrint('[Socket] auto-restored online after reconnect');
+      }
     });
 
     _socket!.onDisconnect((_) {
@@ -183,7 +194,18 @@ class SocketService {
     _presenceSocket?.emit('presence:invisible', {});
   }
 
+  /// Call this instead of emitting 'presence:set' directly.
+  /// Tracks whether the astrologer manually went offline so reconnects
+  /// know whether to auto-restore online status.
+  void setPresence({required bool isOnline, bool isBusy = false}) {
+    _manualOffline = !isOnline;
+    _lastKnownOnline = isOnline;
+    _socket?.emit('presence:set', {'isOnline': isOnline, 'isBusy': isBusy});
+  }
+
   void disconnect() {
+    _manualOffline = false;
+    _lastKnownOnline = false;
     _heartbeatTimer?.cancel();
     _presenceSocket?.disconnect();
     _presenceSocket = null;
