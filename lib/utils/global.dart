@@ -145,7 +145,7 @@ List<HororscopeSignModel> hororscopeSignList = [];
 final List foreignCountryCountList = <String>["0", "1-2", "3-5", "6+"];
 int? userID;
 String appUrl = Uri.encodeFull(
-    "https://play.google.com/store/apps/details?id=com.astrowaydiploy.astrologer");
+    "https://play.google.com/store/apps/details?id=com.gsc.qb.austro.astrologer");
 
 abstract class DateFormatter {
   static String? formatDate(DateTime timestamp) {
@@ -209,14 +209,14 @@ bool? isLeaveVideoCall = false;
 String agoraChannelName = "";
 String agoraToken = "";
 String agoraLiveToken = "";
-String channelName = "astrowayGuruLive";
+String channelName = "astroblessGuruLive";
 String agoraLiveChannelName = "";
 String zegoLiveChannelName = "";
 
-String liveChannelName = "astrowayGuruLive";
+String liveChannelName = "astroblessGuruLive";
 String agoraChatToken = "";
-String agoraChatUserId = "astrowayGuruLive";
-String chatChannelName = "astrowayGuruLive";
+String agoraChatUserId = "astroblessGuruLive";
+String chatChannelName = "astroblessGuruLive";
 String encodedString = "&&";
 String appName = "";
 var nativeAndroidPlatform = const MethodChannel('nativeAndroid');

@@ -3,13 +3,13 @@
 // import 'dart:async';
 // import 'dart:developer';
 // import 'dart:math' as math;
-// import 'package:AstrowayCustomerPro/views/call/zegocloud/common.dart';
+// import 'package:AstroblessCustomerPro/views/call/zegocloud/common.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 // import 'package:responsive_sizer/responsive_sizer.dart';
 // import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 // import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
-// import 'package:AstrowayCustomerPro/utils/global.dart' as global;
+// import 'package:AstroblessCustomerPro/utils/global.dart' as global;
 
 // class Zegolivescreen extends StatefulWidget {
 //   final String liveID;

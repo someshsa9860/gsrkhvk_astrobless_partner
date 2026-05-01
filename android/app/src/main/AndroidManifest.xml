@@ -33,7 +33,7 @@
             tools:replace="android:exported" />
 
        <activity
-           android:name="com.astroway.astrologer_app.MainActivity"
+           android:name="com.astrobless.astrologer_app.MainActivity"
            android:exported="true"
            android:launchMode="singleTask"
            android:theme="@style/LaunchTheme"

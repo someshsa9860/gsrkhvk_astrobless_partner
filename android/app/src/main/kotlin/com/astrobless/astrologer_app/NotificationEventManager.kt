@@ -1,4 +1,4 @@
-package com.astroway.astrologer_app
+package com.astrobless.astrologer_app
 
 import android.util.Log
 import io.flutter.plugin.common.EventChannel
@@ -9,7 +9,7 @@ object NotificationEventManager {
     private var eventSink: EventSink? = null
     fun initialize(flutterEngine: FlutterEngine) {
         Log.e("flutterEngine initialized", "flutterEngine")
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.astrowaypropartner.partner/event_channel").setStreamHandler(
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.astrobless.astrologer_app/event_channel").setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventSink?) {
                     eventSink = events

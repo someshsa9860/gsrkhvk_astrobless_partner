@@ -1,4 +1,4 @@
-package com.astroway.astrologer_app
+package com.astrobless.astrologer_app
 
 import android.os.Handler
 import android.os.Looper

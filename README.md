@@ -1,6 +1,6 @@
-# 🌌 Astroway Pro – Astrologer App
+# 🌌 Astrobless – Astrologer App
 
-Astroway Pro is a professional Flutter application designed for astrologers to connect with clients through live streaming, chat, and personalized astrology services.
+Astrobless is a professional Flutter application designed for astrologers to connect with clients through live streaming, chat, and personalized astrology services.
 
 ---
 

@@ -1,4 +1,4 @@
-package com.astroway.astrologer_app
+package com.astrobless.astrologer_app
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -16,7 +16,7 @@ import androidx.core.net.toUri
 
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL_NAME = "com.astroway.astrologer_app/channel_test"
+    private val CHANNEL_NAME = "com.astrobless.astrologer_app/channel_test"
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 

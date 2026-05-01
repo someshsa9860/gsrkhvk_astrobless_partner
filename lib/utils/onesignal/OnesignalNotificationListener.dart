@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class OneSignalNotificationListener {
   static const _eventChannel =
-      EventChannel('com.astroway.astrologer_app/event_channel');
+      EventChannel('com.astrobless.astrologer_app/event_channel');
 
   // Singleton instance for global usage
   static final OneSignalNotificationListener _instance =
