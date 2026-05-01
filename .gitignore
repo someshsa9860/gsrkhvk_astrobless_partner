@@ -46,6 +46,7 @@ app.*.map.json
 # Android Gradle build cache
 android/.gradle/
 android/local.properties
+android/app/.cxx/
 
 # Keystores / signing keys (secrets)
 android/app/*.jks
