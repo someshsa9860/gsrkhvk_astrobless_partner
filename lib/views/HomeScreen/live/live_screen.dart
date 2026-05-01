@@ -1661,7 +1661,7 @@ class _LiveScreenState extends State<LiveScreen> {
       );
       int? id = userData.id;
       chatuid = "AgoraLiveUser_$id";
-      channel_name = "liveAstrologer_$id"; //astrowayGuruLive_155
+      channel_name = "liveAstrologer_$id"; //astroblessGuruLive_155
       log('channel name is for both partner and user is - $chatuid');
       setState(() {});
       await liveAstrologerController.getRtmToken(
