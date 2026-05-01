@@ -22,7 +22,7 @@ class _PlayerState extends State<Player> {
   @override
   void initState() {
     super.initState();
-    log('url playing is ${'https://s3-ap-south-1.amazonaws.com/astroway/${widget.sid}_${widget.callHistorydata!.channelName}.m3u8'}');
+    log('url playing is ${'https://s3-ap-south-1.amazonaws.com/astrobless/${widget.sid}_${widget.callHistorydata!.channelName}.m3u8'}');
   }
 
   @override
@@ -53,7 +53,7 @@ class _PlayerState extends State<Player> {
                   autoPlayVideoAfterInit: true,
                   aspectRatio: 16 / 9,
                   url:
-                      "https://s3-ap-south-1.amazonaws.com/astroway/${widget.sid}_${widget.callHistorydata!.channelName}.m3u8",
+                      "https://s3-ap-south-1.amazonaws.com/astrobless/${widget.sid}_${widget.callHistorydata!.channelName}.m3u8",
                   videoStyle: const VideoStyle(
                       fullScreenIconSize: 1,
                       fullScreenIconColor: Colors.black,
